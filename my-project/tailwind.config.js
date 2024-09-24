@@ -5,7 +5,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {colors: {
+      sgreen: '#006B0B',
+      bgreen: '#003B06', // Reemplaza con el valor hexadecimal correcto si es distinto
+    },},
   },
   plugins: [],
 }
