@@ -1,31 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaCheck, FaTimes } from 'react-icons/fa';
-import 'flag-icons/css/flag-icons.min.css'; // Para el icono de bandera de Chile
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import Google from '../assets/google.png'; // Asegúrate de tener esta imagen en tu proyecto
 
-const RegisterForm = ({ title, onSubmit }) => {
+const RegisterForm = ({ onSubmit }) => {
   const [step, setStep] = useState(1); // Para manejar el paso actual
-  const [loading, setLoading] = useState(false); // Para manejar la animación de carga
-  const [name, setName] = useState('');
-  const [apellidoPaterno, setApellidoPaterno] = useState('');
-  const [apellidoMaterno, setApellidoMaterno] = useState('');
   const [email, setEmail] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [direccion, setDireccion] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [direccion, setDireccion] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [passwordChecks, setPasswordChecks] = useState({
-    length: false,
-    uppercase: false,
-    number: false,
-    specialChar: false,
-  });
 
-  // Formato del teléfono en tiempo real
   const formatPhone = (value) => {
-    const cleaned = value.replace(/\D/g, ''); // Solo números
+    const cleaned = value.replace(/\D/g, '');
     const match = cleaned.match(/^(\d{1})(\d{4})(\d{4})$/);
     if (match) {
       return `${match[1]} ${match[2]} ${match[3]}`;
@@ -33,245 +22,179 @@ const RegisterForm = ({ title, onSubmit }) => {
     return cleaned;
   };
 
-  // Verificar requisitos de la contraseña
-  const checkPasswordStrength = (password) => {
-    const length = password.length >= 6;
-    const uppercase = /[A-Z]/.test(password);
-    const number = /\d/.test(password);
-    const specialChar = /[@$!%*?&#]/.test(password);
-    setPasswordChecks({ length, uppercase, number, specialChar });
-  };
-
-  // Animación de carga
-  const nextStep = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setStep(step + 1);
-      setLoading(false);
-    }, 500); // Tiempo de espera simulado para la animación de carga
-  };
-
-  const prevStep = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setStep(step - 1);
-      setLoading(false);
-    }, 500); // Tiempo de espera simulado para la animación de carga
-  };
-
-  // Maneja el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;
     }
-    onSubmit({ name, apellidoPaterno, apellidoMaterno, email, password, telefono, direccion });
+    if (step === 1) {
+      // Paso 1 completado, pasar al paso 2
+      setStep(2);
+    } else {
+      // Enviar datos si estamos en el paso 2
+      onSubmit({ email, password, telefono, direccion });
+    }
   };
 
-  // Cambiar entre mostrar y ocultar la contraseña
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-lg p-8 w-full max-w-md mx-auto mt-10">
-      <h2 className="text-center text-xl font-semibold mb-6">{title}</h2>
+    <div className="bg-white rounded-3xl shadow-lg p-8 w-96 mx-auto mt-10">
+      {/* Título del formulario */}
+      <h2 className="text-center text-xl font-semibold mb-2">Regístrate</h2>
+      <p className="text-center text-sm text-gray-600 mb-4">
+        {step === 1
+          ? 'Por favor, introduzca sus datos para registrarse'
+          : 'Opcionalmente, puedes agregar tu teléfono y dirección ahora o hacerlo después.'}
+      </p>
 
-      {loading ? (
-        <div className="flex justify-center items-center">
-          {/* Spinner de carga */}
-          <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          {step === 1 && (
-            <div className="fadeIn flex flex-col">
-              <input
-                type="text"
-                placeholder="Nombre"
-                className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sgreen"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Apellido Paterno"
-                className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sgreen"
-                value={apellidoPaterno}
-                onChange={(e) => setApellidoPaterno(e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Apellido Materno"
-                className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sgreen"
-                value={apellidoMaterno}
-                onChange={(e) => setApellidoMaterno(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                className="bg-sgreen text-white py-2 rounded-lg hover:bg-green-800 w-3/5 mx-auto"
-                onClick={nextStep}
-              >
-                Siguiente
-              </button>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="fadeIn flex flex-col">
+      <form onSubmit={handleSubmit}>
+        {step === 1 && (
+          <>
+            {/* Campo de email */}
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
               <input
                 type="email"
-                placeholder="Correo Electrónico"
-                className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sgreen"
+                placeholder="Correo"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <div className="relative mb-4">
-                <span className="absolute left-3 top-2">
-                  <span className="fi fi-cl mr-2"></span> +56
-                </span>
-                <input
-                  type="tel"
-                  placeholder="9 XXXX XXXX"
-                  className="w-full pl-20 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sgreen"
-                  value={telefono}
-                  onChange={(e) => setTelefono(formatPhone(e.target.value))}
-                  required
-                />
-              </div>
-              <input
-                type="text"
-                placeholder="Dirección"
-                className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sgreen"
-                value={direccion}
-                onChange={(e) => setDireccion(e.target.value)}
-                required
-              />
-              <div className="flex justify-between">
-                <button
-                  type="button"
-                  className="bg-gray-400 text-white py-2 rounded-lg hover:bg-gray-600 w-2/5"
-                  onClick={prevStep}
-                >
-                  Atrás
-                </button>
-                <button
-                  type="button"
-                  className="bg-sgreen text-white py-2 rounded-lg hover:bg-green-800 w-2/5"
-                  onClick={nextStep}
-                >
-                  Siguiente
-                </button>
-              </div>
             </div>
-          )}
 
-          {step === 3 && (
-            <div className="fadeIn flex flex-col">
-              <div className="relative mb-4">
+            {/* Campo de contraseña */}
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
+              <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Contraseña"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sgreen"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen pr-10"
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    checkPasswordStrength(e.target.value);
-                  }}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
-                  className="absolute right-3 top-2 text-sm text-sgreen"
+                  className="absolute right-3 top-2 text-sgreen"
                 >
-                  {showPassword ? "Ocultar" : "Mostrar"}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              <div className="relative mb-4">
+            </div>
+
+            {/* Campo de confirmación de contraseña */}
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Confirmar Contraseña</label>
+              <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Confirmar Contraseña"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sgreen"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen pr-10"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
               </div>
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            </div>
 
-              {/* Requisitos de la contraseña */}
-              <div className="mb-4">
-                <ul className="text-sm">
-                  <li>
-                    {passwordChecks.length ? (
-                      <FaCheck className="inline text-green-500" />
-                    ) : (
-                      <FaTimes className="inline text-red-500" />
-                    )}
-                    &nbsp;Más de 6 caracteres
-                  </li>
-                  <li>
-                    {passwordChecks.uppercase ? (
-                      <FaCheck className="inline text-green-500" />
-                    ) : (
-                      <FaTimes className="inline text-red-500" />
-                    )}
-                    &nbsp;Al menos una mayúscula
-                  </li>
-                  <li>
-                    {passwordChecks.number ? (
-                      <FaCheck className="inline text-green-500" />
-                    ) : (
-                      <FaTimes className="inline text-red-500" />
-                    )}
-                    &nbsp;Al menos un número
-                  </li>
-                  <li>
-                    {passwordChecks.specialChar ? (
-                      <FaCheck className="inline text-green-500" />
-                    ) : (
-                      <FaTimes className="inline text-red-500" />
-                    )}
-                    &nbsp;Al menos un carácter especial (@$!%*?&)
-                  </li>
-                </ul>
-              </div>
+            {/* Botón para avanzar al paso 2 */}
+            <div className="flex justify-center mb-4">
+              <button
+                type="submit"
+                className="bg-sgreen text-white w-full py-2 rounded-xl hover:bg-green-800 transition duration-300"
+              >
+                Registrarse
+              </button>
+            </div>
+          </>
+        )}
 
-              {/* Mostrar error si las contraseñas no coinciden */}
-              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
-              <div className="flex justify-between">
-                <button
-                  type="button"
-                  className="bg-gray-400 text-white py-2 rounded-lg hover:bg-gray-600 w-2/5"
-                  onClick={prevStep}
-                >
-                  Atrás
-                </button>
-                <button
-                  type="submit"
-                  className="bg-sgreen text-white py-2 rounded-lg hover:bg-green-800 w-2/5"
-                >
-                  Registrarse
-                </button>
+        {step === 2 && (
+          <>
+            {/* Campo de teléfono opcional */}
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Teléfono (Opcional)</label>
+              <div className="relative">
+                <span className="absolute left-4 top-2.5 text-gray-500">+56</span>
+                <input
+                  type="tel"
+                  placeholder="9 XXXX XXXX"
+                  className="w-full pl-16 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen"
+                  value={telefono}
+                  onChange={(e) => setTelefono(formatPhone(e.target.value))}
+                />
               </div>
             </div>
-          )}
-        </form>
-      )}
 
-      {/* Link para iniciar sesión si ya tienes cuenta */}
-      <div className="text-center mt-4">
-        <span className="text-gray-600">¿Ya tienes una cuenta?</span>
-        <Link to="/login" className="text-sgreen hover:underline ml-2">
-          Iniciar Sesión
-        </Link>
-      </div>
+            {/* Campo de dirección opcional */}
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Dirección (Opcional)</label>
+              <input
+                type="text"
+                placeholder="Dirección"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen"
+                value={direccion}
+                onChange={(e) => setDireccion(e.target.value)}
+              />
+            </div>
+
+            {/* Botón para completar el registro o saltar el paso */}
+            <div className="flex justify-between">
+              <button
+                type="button"
+                className="bg-gray-300 text-gray-700 w-1/3 py-2 rounded-xl hover:bg-gray-400 transition duration-300"
+                onClick={() => onSubmit({ email, password })}
+              >
+                Saltar
+              </button>
+              <button
+                type="submit"
+                className="bg-sgreen text-white w-1/3 py-2 rounded-xl hover:bg-green-800 transition duration-300"
+              >
+                Completar
+              </button>
+            </div>
+          </>
+        )}
+      </form>
+
+      {step === 1 && (
+        <>
+          {/* Línea divisoria con opción de Google */}
+          <div className="relative my-4 flex items-center justify-center">
+            <hr className="border-gray-300 w-1/3" />
+            <span className="text-gray-500 mx-2">O</span>
+            <hr className="border-gray-300 w-1/3" />
+          </div>
+
+          {/* Botón de registro con Google */}
+          <div className="flex justify-center mb-4">
+            <button
+              type="button"
+              className="flex items-center justify-center bg-gray-100 border border-gray-300 w-full py-2 rounded-xl hover:bg-gray-200 transition duration-300"
+            >
+              <img src={Google} alt="Google" className="w-5 h-5 mr-2" />
+              Registrar con Google
+            </button>
+          </div>
+
+          {/* Texto para iniciar sesión */}
+          <div className="text-center mt-4">
+            <span className="text-gray-600">¿Ya tienes una cuenta?</span>
+            <Link to="/login" className="text-sgreen hover:underline ml-2">
+              Iniciar Sesión
+            </Link>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -10,7 +10,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-sgreen flex flex-col justify-center items-center">
-      <div className="text-center mb-8">
+      <div className="text-center mb-2">
         {/* Inserta el logotipo SVG */}
         <img src={Logo} alt="Logotipo de Relojería y Joyería OMEGA" className="w-48 h-auto" />
       </div>
