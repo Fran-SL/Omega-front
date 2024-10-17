@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import Google from '../assets/google.png'; // Asegúrate de tener esta imagen en tu proyecto
+import Google from '../../assets/google.png';
+import Label from '../ElementosUI/Label'; // Importa el componente Label
+import Button from '../ElementosUI/Button1'; // Importa el componente Button
 
 const RegisterForm = ({ onSubmit }) => {
-  const [step, setStep] = useState(1); // Para manejar el paso actual
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -29,10 +31,8 @@ const RegisterForm = ({ onSubmit }) => {
       return;
     }
     if (step === 1) {
-      // Paso 1 completado, pasar al paso 2
       setStep(2);
     } else {
-      // Enviar datos si estamos en el paso 2
       onSubmit({ email, password, telefono, direccion });
     }
   };
@@ -43,7 +43,6 @@ const RegisterForm = ({ onSubmit }) => {
 
   return (
     <div className="bg-white rounded-3xl shadow-lg p-8 w-96 mx-auto mt-10">
-      {/* Título del formulario */}
       <h2 className="text-center text-xl font-semibold mb-2">Regístrate</h2>
       <p className="text-center text-sm text-gray-600 mb-4">
         {step === 1
@@ -56,8 +55,9 @@ const RegisterForm = ({ onSubmit }) => {
           <>
             {/* Campo de email */}
             <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+              <Label htmlFor="email">Email</Label>
               <input
+                id="email"
                 type="email"
                 placeholder="Correo"
                 className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen"
@@ -69,9 +69,10 @@ const RegisterForm = ({ onSubmit }) => {
 
             {/* Campo de contraseña */}
             <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
+              <Label htmlFor="password">Contraseña</Label>
               <div className="relative">
                 <input
+                  id="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Contraseña"
                   className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen pr-10"
@@ -79,21 +80,22 @@ const RegisterForm = ({ onSubmit }) => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <button
+                <Button
                   type="button"
                   onClick={togglePasswordVisibility}
                   className="absolute right-3 top-2 text-sgreen"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
+                </Button>
               </div>
             </div>
 
-            {/* Campo de confirmación de contraseña */}
+            {/* Confirmación de contraseña */}
             <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Confirmar Contraseña</label>
+              <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
               <div className="relative">
                 <input
+                  id="confirmPassword"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Confirmar Contraseña"
                   className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen pr-10"
@@ -107,12 +109,12 @@ const RegisterForm = ({ onSubmit }) => {
 
             {/* Botón para avanzar al paso 2 */}
             <div className="flex justify-center mb-4">
-              <button
+              <Button
                 type="submit"
-                className="bg-sgreen text-white w-full py-2 rounded-xl hover:bg-green-800 transition duration-300"
+                className="bg-sgreen text-white w-full hover:bg-green-800"
               >
                 Registrarse
-              </button>
+              </Button>
             </div>
           </>
         )}
@@ -121,10 +123,11 @@ const RegisterForm = ({ onSubmit }) => {
           <>
             {/* Campo de teléfono opcional */}
             <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Teléfono (Opcional)</label>
+              <Label htmlFor="telefono">Teléfono (Opcional)</Label>
               <div className="relative">
                 <span className="absolute left-4 top-2.5 text-gray-500">+56</span>
                 <input
+                  id="telefono"
                   type="tel"
                   placeholder="9 XXXX XXXX"
                   className="w-full pl-16 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen"
@@ -136,8 +139,9 @@ const RegisterForm = ({ onSubmit }) => {
 
             {/* Campo de dirección opcional */}
             <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Dirección (Opcional)</label>
+              <Label htmlFor="direccion">Dirección (Opcional)</Label>
               <input
+                id="direccion"
                 type="text"
                 placeholder="Dirección"
                 className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sgreen"
@@ -146,21 +150,21 @@ const RegisterForm = ({ onSubmit }) => {
               />
             </div>
 
-            {/* Botón para completar el registro o saltar el paso */}
+            {/* Botón para completar o saltar */}
             <div className="flex justify-between">
-              <button
+              <Button
                 type="button"
-                className="bg-gray-300 text-gray-700 w-1/3 py-2 rounded-xl hover:bg-gray-400 transition duration-300"
+                className="bg-gray-300 text-gray-700 w-1/3 hover:bg-gray-400"
                 onClick={() => onSubmit({ email, password })}
               >
                 Saltar
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                className="bg-sgreen text-white w-1/3 py-2 rounded-xl hover:bg-green-800 transition duration-300"
+                className="bg-sgreen text-white w-1/3 hover:bg-green-800"
               >
                 Completar
-              </button>
+              </Button>
             </div>
           </>
         )}
@@ -168,22 +172,19 @@ const RegisterForm = ({ onSubmit }) => {
 
       {step === 1 && (
         <>
-          {/* Línea divisoria con opción de Google */}
+          {/* Línea divisoria */}
           <div className="relative my-4 flex items-center justify-center">
             <hr className="border-gray-300 w-1/3" />
             <span className="text-gray-500 mx-2">O</span>
             <hr className="border-gray-300 w-1/3" />
           </div>
 
-          {/* Botón de registro con Google */}
+          {/* Botón de Google */}
           <div className="flex justify-center mb-4">
-            <button
-              type="button"
-              className="flex items-center justify-center bg-gray-100 border border-gray-300 w-full py-2 rounded-xl hover:bg-gray-200 transition duration-300"
-            >
+            <Button className="flex items-center justify-center bg-gray-100 border border-gray-300 w-full hover:bg-gray-200">
               <img src={Google} alt="Google" className="w-5 h-5 mr-2" />
               Registrar con Google
-            </button>
+            </Button>
           </div>
 
           {/* Texto para iniciar sesión */}

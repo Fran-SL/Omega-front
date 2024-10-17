@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthForm from '../components/AuthForm';
+import AuthForm from '../components/Forms/AuthForm';
 import Logo from '../assets/Logo.svg'; // Ajusta la ruta según la ubicación de tu archivo SVG
 
 const Login = () => {
