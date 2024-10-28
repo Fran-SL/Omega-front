@@ -1,31 +1,40 @@
 import React from 'react';
-import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa'; // Importa los iconos
-import Logo from '../assets/Logo.svg'; // Asegúrate de importar correctamente el logo
+import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import Logo from '../assets/Logo.svg';
 
 const Footer = () => {
+  // Variables de estilo
+  const styles = {
+    backgroundGradient: 'bg-gradient-to-b from-white to-gray-300',
+    textColor: 'sgreen',
+    iconHoverColor: 'bgreen',
+    buttonBackground: 'sgreen',
+    buttonHoverBackground: 'bgreen',
+    borderColor: 'sgreen',
+  };
+
   return (
-    <footer className="bg-sgreen text-white py-10">
+    <footer className={`${styles.backgroundGradient} text-${styles.textColor} py-10`}>
       <div className="container mx-auto px-4">
-        {/* Grid que cambia a 3 columnas en pantallas medianas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           
           {/* Columna 1: Logo y redes sociales */}
           <div className="flex flex-col items-center md:items-start">
-            <img src={Logo} alt="Logotipo de Relojería y Joyería OMEGA" className="w-40 h-auto mb-6" />
+            <img src={Logo} alt="Logotipo de OMEGA" className="w-40 h-auto mb-6" />
             <div className="flex space-x-6 justify-center md:justify-start">
-              <a href="#" aria-label="Facebook">
-                <FaFacebook size={40} className="hover:text-gray-400 transition-colors duration-300" />
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <FaFacebook size={40} className={`hover:text-${styles.iconHoverColor} transition-colors duration-300`} />
               </a>
-              <a href="#" aria-label="Instagram">
-                <FaInstagram size={40} className="hover:text-gray-400 transition-colors duration-300" />
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <FaInstagram size={40} className={`hover:text-${styles.iconHoverColor} transition-colors duration-300`} />
               </a>
-              <a href="#" aria-label="LinkedIn">
-                <FaLinkedin size={40} className="hover:text-gray-400 transition-colors duration-300" />
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <FaLinkedin size={40} className={`hover:text-${styles.iconHoverColor} transition-colors duration-300`} />
               </a>
             </div>
           </div>
 
-          {/* Columna 2: Navegación visible solo en pantallas medianas y grandes */}
+          {/* Columna 2: Navegación */}
           <div className="hidden md:block">
             <h3 className="font-semibold mb-4">Navegar</h3>
             <ul className="space-y-2">
@@ -39,7 +48,7 @@ const Footer = () => {
 
           {/* Columna 3: Suscripción */}
           <div>
-            <h3 className="font-semibold mb-4">Suscribir</h3>
+            <h3 className="font-semibold mb-4">Suscribirse</h3>
             <p className="mb-4">
               Únete a nuestro boletín para estar al día de las novedades y lanzamientos.
             </p>
@@ -47,10 +56,10 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="Tu correo electrónico"
-                className="p-2 rounded-xl border-none text-sgreen mb-4 sm:mb-0 sm:mr-4 w-full sm:w-auto"
+                className={`p-2 rounded-xl border-none text-${styles.textColor} mb-4 sm:mb-0 sm:mr-4 w-full sm:w-auto`}
               />
-              <button className="bg-sgreen border border-white text-white px-4 py-2 rounded-xl hover:bg-bgreen transition-colors duration-300 w-full sm:w-auto">
-                Suscribir
+              <button className={`bg-${styles.buttonBackground} border border-${styles.borderColor} text-white px-4 py-2 rounded-xl hover:bg-${styles.buttonHoverBackground} transition-colors duration-300 w-full sm:w-auto`}>
+                Suscribirse
               </button>
             </form>
             <p className="text-xs mt-2">
@@ -60,7 +69,7 @@ const Footer = () => {
         </div>
 
         {/* Parte inferior del footer */}
-        <div className="mt-8 border-t border-white pt-4 flex flex-col md:flex-row justify-between items-center">
+        <div className={`mt-8 border-t border-${styles.borderColor} pt-4 flex flex-col md:flex-row justify-between items-center`}>
           <p>© 2024 Todos los derechos reservados</p>
           
           {/* Navegación de enlaces legales */}
