@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaAngleDown } from 'react-icons/fa'; // Importar el ícono
+import { FaAngleDown } from 'react-icons/fa';
 
 const NavigationLinks = () => {
   const [isCitasOpen, setIsCitasOpen] = useState(false);
@@ -9,7 +9,6 @@ const NavigationLinks = () => {
   const citasRef = useRef(null);
   const serviciosRef = useRef(null);
 
-  // Cerrar dropdown al hacer clic fuera del área
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (citasRef.current && !citasRef.current.contains(e.target)) {
@@ -25,73 +24,50 @@ const NavigationLinks = () => {
   }, []);
 
   return (
-    <nav className="hidden md:flex justify-center space-x-4 text-base">
-      {/* Enlace de navegación */}
-      <Link to="/" className="text-sgreen text-lg hover:bg-gray-200 py-2 px-6 rounded-2xl transition duration-300">
+    <nav className="flex space-x-4 text-gray-700">
+      {/* Enlace "Inicio" */}
+      <Link to="/" className="hover:text-sgreen transition duration-300">
         Inicio
       </Link>
 
-      {/* Dropdown de Citas */}
-      <div className="relative dropdown-menu" ref={citasRef}>
+      {/* Menú desplegable para "Citas" */}
+      <div className="relative" ref={citasRef}>
         <button
-          className="text-sgreen text-lg hover:bg-gray-200 py-2 px-6 rounded-2xl transition duration-300 flex items-center space-x-2"
-          onClick={() => setIsCitasOpen((prev) => !prev)}
-          aria-expanded={isCitasOpen}
+          onClick={() => setIsCitasOpen(!isCitasOpen)}
+          className="flex items-center hover:text-sgreen transition duration-300"
         >
-          <span>Citas</span>
-          <FaAngleDown />
+          Citas <FaAngleDown className="ml-1" />
         </button>
-
         {isCitasOpen && (
-          <div
-            className="absolute left-0 min-w-full bg-white border-2 border-gray-200 rounded-b-2xl z-20 transition-all duration-300 ease-in-out overflow-hidden"
-          >
-            <Link to="/citas/consulta" className="block px-4 py-2 text-sgreen hover:bg-gray-200">
-              Consulta
-            </Link>
-            <Link to="/citas/reservas" className="block px-4 py-2 text-sgreen hover:bg-gray-200">
-              Reservas
-            </Link>
-            <Link to="/citas/historial" className="block px-4 py-2 text-sgreen hover:bg-gray-200">
-              Historial
-            </Link>
+          <div className="absolute top-full mt-2 bg-white/90 backdrop-blur-md border border-sgreen/10 rounded-b-2xl shadow-lg w-auto text-gray-700">
+            <Link to="/citas/nueva" className="block px-4 py-2 hover:text-sgreen rounded-t-md">Agendar Cita</Link>
+            <Link to="/citas/historial" className="block px-4 py-2 hover:text-sgreen rounded-b-md">Historial</Link>
           </div>
         )}
       </div>
 
-      {/* Dropdown de Servicios */}
-      <div className="relative dropdown-menu" ref={serviciosRef}>
+      {/* Menú desplegable para "Servicios" */}
+      <div className="relative" ref={serviciosRef}>
         <button
-          className="text-sgreen text-lg hover:bg-gray-200 py-2 px-6 rounded-2xl transition duration-300 flex items-center space-x-2"
-          onClick={() => setIsServiciosOpen((prev) => !prev)}
-          aria-expanded={isServiciosOpen}
+          onClick={() => setIsServiciosOpen(!isServiciosOpen)}
+          className="flex items-center hover:text-sgreen transition duration-300"
         >
-          <span>Servicios</span>
-          <FaAngleDown />
+          Servicios <FaAngleDown className="ml-1" />
         </button>
-
         {isServiciosOpen && (
-          <div
-            className="absolute left-0 min-w-full bg-white border-2 border-gray-200 rounded-b-2xl z-20 transition-all duration-300 ease-in-out overflow-hidden"
-          >
-            <Link to="/servicios/medicos" className="block px-4 py-2 text-sgreen hover:bg-gray-200">
-              Servicios Médicos
-            </Link>
-            <Link to="/servicios/emergencias" className="block px-4 py-2 text-sgreen hover:bg-gray-200">
-              Emergencias
-            </Link>
-            <Link to="/servicios/especializados" className="block px-4 py-2 text-sgreen hover:bg-gray-200">
-              Servicios Especializados
-            </Link>
+          <div className="absolute top-full mt-2 bg-white/95 backdrop-blur-md border border-sgreen/10 rounded-b-2xl shadow-lg w-auto text-gray-700">
+            <Link to="/servicios/personalizacion" className="block px-4 py-2 hover:text-sgreen rounded-t-md">Personalizacion</Link>
+            <Link to="/servicios/reparacion" className="block px-4 py-2 hover:text-sgreen rounded-b-md">Reparacion</Link>
+            <Link to="/faq" className="block px-4 py-2 hover:text-sgreen rounded-b-md">Preguntas Frecuentes</Link>
           </div>
         )}
       </div>
 
-      {/* Resto de enlaces */}
-      <Link to="/blog" className="text-sgreen text-lg hover:bg-gray-200 py-2 px-6 rounded-2xl transition duration-300">
+      {/* Otros enlaces */}
+      <Link to="/blog" className="hover:text-sgreen transition duration-300">
         Blog
       </Link>
-      <Link to="/acerca" className="text-sgreen text-lg hover:bg-gray-200 py-2 px-6 rounded-2xl transition duration-300">
+      <Link to="/about" className="hover:text-sgreen transition duration-300 whitespace-nowrap">
         Quiénes Somos
       </Link>
     </nav>

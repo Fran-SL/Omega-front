@@ -188,7 +188,7 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto my-10 p-0 bg-white rounded-2xl overflow-hidden border border-gray-200">
+    <div className="max-w-4xl mx-auto my-10 mt-10 p-0 bg-white rounded-2xl overflow-hidden border border-gray-200">
       
       {/* Encabezado con imagen */}
       <div className="relative">
@@ -317,7 +317,7 @@ const UserProfile = () => {
           <>
             <button 
               onClick={handleSaveProfile} 
-              className="bg-sgreen text-white py-2 px-6 rounded-2xl hover:bg-bgreen transition"
+              className="bg-sgreen text-white py-2 px-6 border-2 border-green-500 rounded-2xl shadow-inner-green hover:scale-105 transition duration-300 ease-in-out"
               aria-label="Guardar cambios"
             >
               Guardar Cambios
@@ -334,7 +334,7 @@ const UserProfile = () => {
           <>
             <button
               onClick={() => setIsEditing(true)}
-              className="bg-sgreen text-white py-2 px-6 rounded-2xl hover:bg-bgreen transition"
+              className="bg-sgreen text-white py-2 px-6 border-2 border-green-500 rounded-2xl shadow-inner-green hover:scale-105 transition duration-300 ease-in-out"
               aria-label="Editar perfil"
             >
               Editar Perfil

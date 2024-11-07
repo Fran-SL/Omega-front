@@ -15,7 +15,7 @@ const UserMenu = ({ user, handleLogout }) => {
 
   return (
     <div className="relative flex items-center space-x-2">
-      <span className="text-sgreen font-greatvibes text-xl">Bienvenido, {user.nombre}</span>
+      <span className="text-sgreen font-greatvibes text-xm">Bienvenido, {user.nombre}</span>
       <img
         src={profileImage}
         alt="User"
@@ -24,7 +24,7 @@ const UserMenu = ({ user, handleLogout }) => {
       />
       {/* Menú desplegable animado */}
       <div
-        className={`mt-4 absolute right-0 top-full w-48 bg-white rounded-b-2xl border-2 border-gray-200 z-20 overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`mt-4 absolute right-0 top-full w-48 bg-white rounded-2xl border-2 border-gray-200 z-20 overflow-hidden transition-all duration-300 ease-in-out ${
           isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >

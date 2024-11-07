@@ -1,20 +1,20 @@
 import React from 'react';
 import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
-import Logo from '../assets/Logo.svg';
+import Logo from '../assets/Logo_neg.svg';
 
 const Footer = () => {
   // Variables de estilo
   const styles = {
-    backgroundGradient: 'bg-gradient-to-b from-white to-gray-300',
-    textColor: 'sgreen',
+    backgroundGradient: 'bg-sgreen',
+    textColor: 'white',
     iconHoverColor: 'bgreen',
     buttonBackground: 'sgreen',
-    buttonHoverBackground: 'bgreen',
-    borderColor: 'sgreen',
+    buttonHoverBackground: 'sgreen',
+    borderColor: 'white',
   };
 
   return (
-    <footer className={`${styles.backgroundGradient} text-${styles.textColor} py-10`}>
+    <footer className={`${styles.backgroundGradient} text-${styles.textColor} py-10 font-ibm`}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           
@@ -42,7 +42,7 @@ const Footer = () => {
               <li><a href="#" className="hover:underline">Citas</a></li>
               <li><a href="#" className="hover:underline">Servicios</a></li>
               <li><a href="#" className="hover:underline">Blog</a></li>
-              <li><a href="#" className="hover:underline">Acerca de</a></li>
+              <li><a href="#" className="hover:underline">Quiénes Somos</a></li>
             </ul>
           </div>
 
@@ -58,7 +58,7 @@ const Footer = () => {
                 placeholder="Tu correo electrónico"
                 className={`p-2 rounded-xl border-none text-${styles.textColor} mb-4 sm:mb-0 sm:mr-4 w-full sm:w-auto`}
               />
-              <button className={`bg-${styles.buttonBackground} border border-${styles.borderColor} text-white px-4 py-2 rounded-xl hover:bg-${styles.buttonHoverBackground} transition-colors duration-300 w-full sm:w-auto`}>
+              <button className={`bg-sgreen text-white py-2 px-6 border-2 border-green-500 rounded-2xl shadow-inner-green hover:scale-105 transition duration-300 ease-in-out`}>
                 Suscribirse
               </button>
             </form>

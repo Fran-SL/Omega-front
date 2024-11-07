@@ -1,25 +1,20 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FaSearch } from 'react-icons/fa';
 import logo from '../assets/logo.svg';
 import { AuthContext } from '../services/authContext';
-import NavigationLinks from '../components/NavigationLinks';
-import UserMenu from '../components/UserMenu';
+import NavigationLinks from './NavigationLinks';
+import UserMenu from './UserMenu';
+import MobileMenu from './MobileMenu';
+import { FaBars } from 'react-icons/fa';
 
 const Header = () => {
   const { user, logoutUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    console.log(`Searching for: ${searchQuery}`);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleLogout = () => {
@@ -35,50 +30,62 @@ const Header = () => {
   }, [user, navigate, location.pathname]);
 
   return (
-    <>
-      <header className="bg-white border-b-2 border-gray-200 font-playfair">
-        <div className="container mx-auto flex justify-between items-center h-20 px-4">
-          <form onSubmit={handleSearchSubmit} className="hidden md:flex items-center w-1/3">
-            <div className="relative w-60">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                placeholder="Buscar..."
-                className="w-full py-2 px-10 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-sgreen text-black"
-              />
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            </div>
-          </form>
+    <header className="bg-white/70 backdrop-blur-lg font-ibm fixed top-0 left-0 w-full z-50 h-20">
+      <div className="container mx-auto flex justify-between items-center h-full px-4">
+        
+        {/* Logo a la izquierda */}
+        <Logo />
 
-          <div className="flex justify-center w-1/3">
-            <img src={logo} alt="Logo" className="w-32 h-auto" />
+        {/* Navegación en el centro */}
+        <div className="hidden md:flex w-1/3 justify-center">
+          <div className="bg-transparent backdrop-blur-md border border-sgreen/15 rounded-full px-6 py-2 flex items-center justify-center space-x-6">
+            <NavigationLinks className="whitespace-nowrap" />
           </div>
+        </div>
 
-          <div className="hidden md:flex items-center space-x-4 w-1/3 justify-end">
+        {/* Menú del usuario a la derecha y menú móvil */}
+        <div className="flex items-center space-x-4 ml-auto">
+          <div className="hidden md:flex">
             {user ? (
               <UserMenu user={user} handleLogout={handleLogout} />
             ) : (
               <>
-                <Link to="/login" className="text-gray-400 border border-gray-400 py-2 px-5 rounded-2xl hover:border-sgreen hover:text-sgreen transition">
+                <Link to="/login" className="text-gray-700 py-2 px-2 rounded-2xl hover:border-sgreen hover:text-sgreen transition">
                   Iniciar sesión
                 </Link>
-                <Link to="/register" className="bg-sgreen text-white py-2 px-5 rounded-2xl hover:bg-bgreen transition">
+                <Link to="/register" className="bg-sgreen text-white py-2 px-4 border-2 border-green-500 rounded-2xl shadow-inner-green hover:shadow-inner-hgreen transition duration-300 ease-in-out">
                   Registrarse
                 </Link>
               </>
             )}
           </div>
+          
+          {/* Botón de menú móvil */}
+          <button onClick={toggleMobileMenu} className="md:hidden text-gray-700">
+            <FaBars size={24} />
+          </button>
         </div>
-      </header>
+      </div>
 
-      <nav className="bg-white border-b-2 border-gray-200 font-playfair">
-        <div className="container mx-auto flex justify-center">
-          <NavigationLinks />
-        </div>
-      </nav>
-    </>
+      {/* Menú móvil */}
+      <MobileMenu
+        isMobileMenuOpen={isMobileMenuOpen}
+        toggleMobileMenu={toggleMobileMenu}
+        user={user}
+        handleLogout={handleLogout}
+      />
+    </header>
   );
 };
 
+// Componente Logo
+const Logo = () => (
+  <div className="w-1/3 flex justify-start">
+    <Link to="/">
+      <img src={logo} alt="Logo" className="w-32 h-auto" />
+    </Link>
+  </div>
+);
+
 export default Header;
+

@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import { register } from '../services/authService';
 import { getCroppedImg } from '../utils/cropImage';
+import { FaHome } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import logo from '../assets/logo.svg';
 import userImageDefault from '../assets/userdefect.png';
 
 const Register = () => {
@@ -107,20 +110,20 @@ const Register = () => {
   }, [isRegistered, countdown, navigate]);
 
   const renderProgressIndicator = () => (
-    <div className="flex justify-between items-center mb-6 space-x-2">
+    <div className="flex justify-center items-center mb-6">
       {[1, 2, 3].map((stepNum) => (
         <div key={stepNum} className="flex items-center">
           <div
-            className={`rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold ${
-              step >= stepNum ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'
+            className={`rounded-full h-8 w-8 flex items-center justify-center text-xs font-bold transition-colors duration-300 ${
+              step >= stepNum ? 'bg-sgreen text-white' : 'bg-gray-300 text-gray-600'
             }`}
           >
             {stepNum}
           </div>
           {stepNum < 3 && (
             <div
-              className={`h-1 w-6 sm:w-8 lg:w-10 ${
-                step > stepNum ? 'bg-green-500' : 'bg-gray-300'
+              className={`h-1 w-8 sm:w-12 lg:w-16 transition-colors duration-300 ${
+                step > stepNum ? 'bg-sgreen' : 'bg-gray-300'
               }`}
             ></div>
           )}
@@ -130,34 +133,83 @@ const Register = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-2xl w-full max-w-sm mt-4">
+    <motion.div
+      className="min-h-screen font-ibm flex items-center justify-center bg-white relative"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="bg-white p-8 rounded-2xl w-full max-w-sm mt-4"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <motion.img
+          src={logo}
+          alt="Logo"
+          className="mx-auto mb-4"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+        />
+
         {isRegistered ? (
-          <div className="text-center">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <h2 className="text-2xl font-bold mb-4">¡Registro exitoso!</h2>
             <p>Te redirigiremos al inicio de sesión en {countdown} segundos...</p>
-            <button
+            <motion.button
               onClick={() => navigate('/login')}
               className="mt-4 bg-sgreen text-white px-4 py-2 rounded-2xl hover:bg-green-600"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               Ir al Login ahora
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         ) : (
           <>
+            <div className="relative flex items-center mb-4">
+              <button
+                onClick={() => navigate('/')}
+                className="bg-sgreen text-white p-2 rounded-full hover:bg-bgreen absolute left-0"
+              >
+                <FaHome className="w-5 h-5" />
+              </button>
+              <h2 className="text-2xl font-bold text-center w-full">Regístrate</h2>
+            </div>
+
             {renderProgressIndicator()}
-            <h2 className="text-2xl font-bold text-center mb-2">Regístrate</h2>
+
             {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-            <form onSubmit={handleSubmit} className="space-y-3" encType="multipart/form-data" role="form">
+            <motion.form
+              onSubmit={handleSubmit}
+              className="space-y-3"
+              encType="multipart/form-data"
+              role="form"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               {step === 1 && (
                 <>
                   <InputField label="Nombre" name="nombre" type="text" value={formData.nombre} onChange={handleChange} required />
                   <InputField label="Apellido Paterno" name="apellido_paterno" type="text" value={formData.apellido_paterno} onChange={handleChange} required />
                   <InputField label="Apellido Materno" name="apellido_materno" type="text" value={formData.apellido_materno} onChange={handleChange} required />
-                  <button type="submit" className="w-full bg-sgreen text-white px-4 py-2 rounded-2xl hover:bg-green-600">
+                  <motion.button
+                    type="submit"
+                    className="w-full bg-sgreen text-white py-2 px-6 border-2 border-green-500 rounded-2xl shadow-inner-green hover:scale-105 transition duration-300 ease-in-out"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
                     Siguiente
-                  </button>
+                  </motion.button>
                 </>
               )}
 
@@ -166,9 +218,14 @@ const Register = () => {
                   <InputField label="Correo Electrónico" name="correo_electronico" type="email" value={formData.correo_electronico} onChange={handleChange} required />
                   <InputField label="Contraseña" name="contrasena" type="password" value={formData.contrasena} onChange={handleChange} required />
                   <InputField label="Confirmar Contraseña" name="confirmarContrasena" type="password" value={formData.confirmarContrasena} onChange={handleChange} required />
-                  <button type="submit" className="w-full bg-sgreen text-white px-4 py-2 rounded-2xl hover:bg-green-600">
+                  <motion.button
+                    type="submit"
+                    className="w-full bg-sgreen text-white py-2 px-6 border-2 border-green-500 rounded-2xl shadow-inner-green hover:scale-105 transition duration-300 ease-in-out"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
                     Siguiente
-                  </button>
+                  </motion.button>
                 </>
               )}
 
@@ -195,15 +252,27 @@ const Register = () => {
                   <InputField label="Teléfono" name="telefono" type="tel" value={formData.telefono} onChange={handleChange} placeholder="+56 X XXXX XXXX" required />
                   <InputField label="Dirección" name="direccion" type="text" value={formData.direccion} onChange={handleChange} />
 
-                  <button type="submit" className="w-full bg-sgreen text-white px-4 py-2 rounded-2xl hover:bg-green-600" disabled={isLoading}>
+                  <motion.button
+                    type="submit"
+                    className="w-full bg-sgreen text-white py-2 px-6 border-2 border-green-500 rounded-2xl shadow-inner-green hover:scale-105 transition duration-300 ease-in-out"
+                    disabled={isLoading}
+                    whileHover={!isLoading && { scale: 1.05 }}
+                    whileTap={!isLoading && { scale: 0.95 }}
+                  >
                     {isLoading ? 'Registrando...' : 'Registrar'}
-                  </button>
+                  </motion.button>
                 </>
               )}
-            </form>
+            </motion.form>
 
             {showCropper && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <motion.div
+                className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
                 <div className="bg-white p-4 rounded-lg w-80">
                   <h2 className="text-center font-bold mb-4">Recortar Imagen</h2>
                   <div style={{ width: '100%', height: '300px', position: 'relative' }}>
@@ -218,20 +287,30 @@ const Register = () => {
                     />
                   </div>
                   <div className="flex justify-center mt-4">
-                    <button onClick={handleSaveCroppedImage} className="bg-blue-500 text-white py-2 px-4 rounded-lg mr-2">
+                    <motion.button
+                      onClick={handleSaveCroppedImage}
+                      className="bg-sgreen hover:bg-bgreen text-white py-2 px-4 rounded-2xl mr-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       Guardar
-                    </button>
-                    <button onClick={handleCancelCrop} className="bg-red-500 text-white py-2 px-4 rounded-lg">
+                    </motion.button>
+                    <motion.button
+                      onClick={handleCancelCrop}
+                      className="bg-white border border-sgreen text-sgreen py-2 px-4 rounded-2xl"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       Cancelar
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             )}
           </>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
