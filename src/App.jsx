@@ -11,6 +11,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import FAQ from './pages/Faq';
 import NotFoundPage from './pages/404'; // Importa el componente NotFoundPage
 
+import AgendarCita from './pages/agendar_cita';
+
 function Layout({ children }) {
   const location = useLocation();
   const hideHeaderFooter = location.pathname === '/login' || location.pathname === '/register';
@@ -37,6 +39,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/agendar-cita" element={<AgendarCita/>}/>
             <Route
               path="/profile"
               element={
