@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
-import { register } from '../services/authService';
-import { getCroppedImg } from '../utils/cropImage';
+import { register } from '../../services/authService';
+import { getCroppedImg } from '../../utils/cropImage';
 import { FaHome } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import logo from '../assets/logo.svg';
-import userImageDefault from '../assets/userdefect.png';
+import logo from '../../assets/logo.svg';
+import userImageDefault from '../../assets/userdefect.png';
 
 const Register = () => {
   const [formData, setFormData] = useState({

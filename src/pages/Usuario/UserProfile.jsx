@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext, Suspense } from 'react';
-import { AuthContext } from '../services/authContext';
-import userImageDefault from '../assets/userdefect.png';
+import { AuthContext } from '../../services/authContext';
+import userImageDefault from '../../assets/userdefect.png';
 import { useNavigate } from 'react-router-dom';
-import { getCroppedImg } from '../utils/cropImage';
-import { getProfile, updateProfile, deleteAccount } from '../services/authService';
+import { getCroppedImg } from '../../utils/cropImage';
+import { getProfile, updateProfile, deleteAccount } from '../../services/authService';
 import debounce from 'lodash.debounce';  
 import imageCompression from 'browser-image-compression'; 
-import ModalDeleteAccount from '../components/ModalDeleteAccount';
-import userBackground from '../assets/user_background.jpg';
+import Modal from '../../components/Modal';
+import userBackground from '../../assets/user_background.jpg';
 
 const LazyCropper = React.lazy(() => import('react-easy-crop'));
 
@@ -231,7 +231,7 @@ const UserProfile = () => {
         {`${formData.nombre || 'Nombre'} ${formData.apellido_paterno || 'Apellido Paterno'} ${formData.apellido_materno || 'Apellido Materno'}`}
       </div>
 
-      {/* Formulario de datos */}
+      {/* Formulario */}
       <div className="mt-6 p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-gray-600">Nombre:</label>
@@ -241,23 +241,13 @@ const UserProfile = () => {
             value={formData.nombre || ''}
             disabled={!isEditing}
             onChange={handleInputChange}
-            className={`w-full p-2 mt-1 border rounded-2xl ${isEditing ? 'border-sgreen bg-white' : 'bg-gray-100'}`}
-            aria-label="Nombre"
+            className={`w-full p-2 mt-1 border rounded-2xl transition-all duration-300 ${
+              isEditing
+                ? 'border-sgreen bg-white scale-105 shadow-md'
+                : 'border-gray-300 bg-gray-100 scale-100'
+            }`}
           />
         </div>
-
-        <div>
-          <label className="block text-gray-600">Correo:</label>
-          <input
-            type="email"
-            name="correo_electronico"
-            value={formData.correo_electronico || ''}
-            disabled
-            className="w-full p-2 mt-1 border rounded-2xl bg-gray-100"
-            aria-label="Correo Electrónico"
-          />
-        </div>
-
         <div>
           <label className="block text-gray-600">Apellido Paterno:</label>
           <input
@@ -266,24 +256,13 @@ const UserProfile = () => {
             value={formData.apellido_paterno || ''}
             disabled={!isEditing}
             onChange={handleInputChange}
-            className={`w-full p-2 mt-1 border rounded-2xl ${isEditing ? 'border-sgreen bg-white' : 'bg-gray-100'}`}
-            aria-label="Apellido Paterno"
+            className={`w-full p-2 mt-1 border rounded-2xl transition-all duration-300 ${
+              isEditing
+                ? 'border-sgreen bg-white scale-105 shadow-md'
+                : 'border-gray-300 bg-gray-100 scale-100'
+            }`}
           />
         </div>
-
-        <div>
-          <label className="block text-gray-600">Dirección:</label>
-          <input
-            type="text"
-            name="direccion"
-            value={formData.direccion || ''}
-            disabled={!isEditing}
-            onChange={handleInputChange}
-            className={`w-full p-2 mt-1 border rounded-2xl ${isEditing ? 'border-sgreen bg-white' : 'bg-gray-100'}`}
-            aria-label="Dirección"
-          />
-        </div>
-
         <div>
           <label className="block text-gray-600">Apellido Materno:</label>
           <input
@@ -292,11 +271,23 @@ const UserProfile = () => {
             value={formData.apellido_materno || ''}
             disabled={!isEditing}
             onChange={handleInputChange}
-            className={`w-full p-2 mt-1 border rounded-2xl ${isEditing ? 'border-sgreen bg-white' : 'bg-gray-100'}`}
-            aria-label="Apellido Materno"
+            className={`w-full p-2 mt-1 border rounded-2xl transition-all duration-300 ${
+              isEditing
+                ? 'border-sgreen bg-white scale-105 shadow-md'
+                : 'border-gray-300 bg-gray-100 scale-100'
+            }`}
           />
         </div>
-
+        <div>
+          <label className="block text-gray-600">Correo Electrónico:</label>
+          <input
+            type="email"
+            name="correo_electronico"
+            value={formData.correo_electronico || ''}
+            disabled
+            className="w-full p-2 mt-1 border rounded-2xl bg-gray-100"
+          />
+        </div>
         <div>
           <label className="block text-gray-600">Teléfono:</label>
           <input
@@ -305,8 +296,26 @@ const UserProfile = () => {
             value={formData.telefono || ''}
             disabled={!isEditing}
             onChange={handleInputChange}
-            className={`w-full p-2 mt-1 border rounded-2xl ${isEditing ? 'border-sgreen bg-white' : 'bg-gray-100'}`}
-            aria-label="Teléfono"
+            className={`w-full p-2 mt-1 border rounded-2xl transition-all duration-300 ${
+              isEditing
+                ? 'border-sgreen bg-white scale-105 shadow-md'
+                : 'border-gray-300 bg-gray-100 scale-100'
+            }`}
+          />
+        </div>
+        <div>
+          <label className="block text-gray-600">Dirección:</label>
+          <input
+            type="text"
+            name="direccion"
+            value={formData.direccion || ''}
+            disabled={!isEditing}
+            onChange={handleInputChange}
+            className={`w-full p-2 mt-1 border rounded-2xl transition-all duration-300 ${
+              isEditing
+                ? 'border-sgreen bg-white scale-105 shadow-md'
+                : 'border-gray-300 bg-gray-100 scale-100'
+            }`}
           />
         </div>
       </div>
@@ -351,7 +360,7 @@ const UserProfile = () => {
       </div>
 
       {/* Modal para confirmar eliminación de cuenta */}
-      <ModalDeleteAccount
+      <Modal
         showModal={showModal}
         toggleModal={toggleModal}
         handleDeleteAccount={handleDeleteAccount}

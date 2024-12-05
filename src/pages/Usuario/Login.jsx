@@ -1,11 +1,11 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../services/authService';
-import { AuthContext } from '../services/authContext';
+import { login } from '../../services/authService';
+import { AuthContext } from '../../services/authContext';
 import { motion } from 'framer-motion';
 import { AiOutlineLoading, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import logo from '../assets/logo.svg';
-import googleLogo from '../assets/google.png';
+import logo from '../../assets/logo.svg';
+import googleLogo from '../../assets/google.png';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -25,25 +25,34 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const response = await login(formData);
-      loginUser({
-        nombre: response.nombre,
-        token: response.token,
-        foto_perfil_url: response.foto_perfil_url,
-      });
-      navigate('/');
-      setError(null);
-    } catch (error) {
-      setError('Error al iniciar sesión. Verifica tus credenciales.');
-    } finally {
-      setLoading(false);
+  try {
+    const response = await login(formData);
+    loginUser({
+      nombre: response.nombre,
+      token: response.token,
+      foto_perfil_url: response.foto_perfil_url,
+      rol_id: response.rol_id, // Asegúrate de que el backend devuelve el rol_id
+    });
+
+    // Redirigir según el rol del usuario
+    if (response.rol_id === 2) {
+      navigate('/admin'); // Redirige al panel de administración
+    } else {
+      navigate('/'); // Redirige al inicio para usuarios normales
     }
-  };
+
+    setError(null);
+  } catch (error) {
+    setError('Error al iniciar sesión. Verifica tus credenciales.');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -72,7 +81,7 @@ const Login = () => {
         />
         <p className="text-center text-gray-500 mb-4">Introduce tus datos para iniciar sesión</p>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <motion.div
             initial={{ x: -20, opacity: 0 }}
@@ -120,6 +129,12 @@ const Login = () => {
               </button>
             </div>
           </motion.div>
+          <a
+            href="/forgot-password"
+            className="block text-sm text-center text-sgreen hover:underline"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
           <motion.button
             type="submit"
             className="w-full bg-sgreen text-white py-2 px-6 border-2 border-green-500 rounded-2xl shadow-inner-green hover:scale-105 hover:shadow-inner-hgreen transition duration-300 ease-in-out"

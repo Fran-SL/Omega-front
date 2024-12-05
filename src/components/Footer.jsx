@@ -19,9 +19,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           
           {/* Columna 1: Logo y redes sociales */}
-          <div className="flex flex-col items-center md:items-start">
+          <section aria-labelledby="social-media" className="flex flex-col items-center md:items-start">
             <img src={Logo} alt="Logotipo de OMEGA" className="w-40 h-auto mb-6" />
-            <div className="flex space-x-6 justify-center md:justify-start">
+            <address className="flex space-x-6 justify-center md:justify-start not-italic">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <FaFacebook size={40} className={`hover:text-${styles.iconHoverColor} transition-colors duration-300`} />
               </a>
@@ -31,12 +31,12 @@ const Footer = () => {
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <FaLinkedin size={40} className={`hover:text-${styles.iconHoverColor} transition-colors duration-300`} />
               </a>
-            </div>
-          </div>
+            </address>
+          </section>
 
           {/* Columna 2: Navegación */}
-          <div className="hidden md:block">
-            <h3 className="font-semibold mb-4">Navegar</h3>
+          <nav aria-labelledby="footer-navigation" className="hidden md:block">
+            <h3 id="footer-navigation" className="font-semibold mb-4">Navegar</h3>
             <ul className="space-y-2">
               <li><a href="#" className="hover:underline">Inicio</a></li>
               <li><a href="#" className="hover:underline">Citas</a></li>
@@ -44,11 +44,11 @@ const Footer = () => {
               <li><a href="#" className="hover:underline">Blog</a></li>
               <li><a href="#" className="hover:underline">Quiénes Somos</a></li>
             </ul>
-          </div>
+          </nav>
 
           {/* Columna 3: Suscripción */}
-          <div>
-            <h3 className="font-semibold mb-4">Suscribirse</h3>
+          <section aria-labelledby="subscription">
+            <h3 id="subscription" className="font-semibold mb-4">Suscribirse</h3>
             <p className="mb-4">
               Únete a nuestro boletín para estar al día de las novedades y lanzamientos.
             </p>
@@ -65,7 +65,7 @@ const Footer = () => {
             <p className="text-xs mt-2">
               Al suscribirte, aceptas nuestra <a href="#" className="hover:underline">Política de Privacidad</a> y das tu consentimiento para recibir actualizaciones.
             </p>
-          </div>
+          </section>
         </div>
 
         {/* Parte inferior del footer */}
@@ -73,7 +73,7 @@ const Footer = () => {
           <p>© 2024 Todos los derechos reservados</p>
           
           {/* Navegación de enlaces legales */}
-          <nav className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:space-x-4 mt-4 md:mt-0">
+          <nav aria-labelledby="legal-links" className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:space-x-4 mt-4 md:mt-0">
             <a href="#" className="hover:underline">Política de Privacidad</a>
             <a href="#" className="hover:underline">Términos de Servicio</a>
             <a href="#" className="hover:underline">Configuración de Cookies</a>

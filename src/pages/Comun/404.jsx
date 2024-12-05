@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import galaxy from '../assets/greengalaxy.jpg'; // Asegúrate de que la ruta sea correcta
+import galaxy from '../../assets/greengalaxy.jpg'; // Asegúrate de que la ruta sea correcta
 
 const NotFoundPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white text-center p-6">
+    <div className="flex flex-col font-ibm items-center justify-center min-h-screen bg-white text-center p-6">
       {/* Texto "Oops!" con imagen de fondo personalizada */}
       <motion.h1
         className="text-9xl font-extrabold text-transparent bg-clip-text"
