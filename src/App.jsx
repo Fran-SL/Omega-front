@@ -5,9 +5,33 @@ import { AuthProvider } from './services/authContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
-import FAQ from './pages/Faq';
-import NotFoundPage from './pages/404'; // Importa el componente NotFoundPage
 
+// Páginas principales
+import Home from './pages/Comun/Home';
+import About from './pages/Comun/About';
+import FAQ from './pages/Comun/Faq';
+import NotFoundPage from './pages/Comun/404';
+
+// Páginas de autenticación
+import Login from './pages/Usuario/Login';
+import Register from './pages/Usuario/Register';
+import Solicitud from './pages/Usuario/Solicitud';
+import Restablecer from './pages/Usuario/Restablecer';
+import Profile from './pages/Usuario/UserProfile';
+
+// Páginas del blog
+import Blog from './pages/Comun/Blog';
+import ArticleDetail from './pages/Comun/ArticleDetail';
+
+// Administración de blog
+import AdminDashboard  from './pages/Admin/AdminDashboard';
+import ArticleForm from './pages/Admin/ArticleForm';
+import ManageArticles from './pages/Admin/ManageArticles';
+
+// Admin usuarios
+import ManageUsers from './pages/Admin/ManageUsers';
+
+// Layout general
 function Layout({ children }) {
   const location = useLocation();
 
@@ -44,7 +68,10 @@ function App() {
             <Route path="/blog/:id" element={<ArticleDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/faq" element={<FAQ />} />
+            <Route path="/forgot-password" element={<Solicitud />} />
+            <Route path="/reset-password" element={<Restablecer />} />
+
+            {/* Rutas para usuarios autenticados */}
             <Route
               path="/profile"
               element={
