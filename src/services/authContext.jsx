@@ -1,49 +1,51 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null); // Token en el estado
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const savedUser = sessionStorage.getItem('user');
-    const savedToken = sessionStorage.getItem('token');
-    console.log('Token desde sessionStorage:', savedToken); // Verifica el token
-    setToken(savedToken);
-    const tokenExpiration = parseInt(sessionStorage.getItem('tokenExpiration'), 10); // Convertir a número
+    const savedUser = sessionStorage.getItem("user");
+    const savedToken = sessionStorage.getItem("token");
 
-    if (savedUser && savedToken && tokenExpiration) {
+    if (savedUser && savedToken) {
+      const tokenExpiration = parseInt(
+        sessionStorage.getItem("tokenExpiration"),
+        10
+      );
       const now = new Date().getTime();
+
       if (now < tokenExpiration) {
         setUser(JSON.parse(savedUser));
-        setToken(savedToken); // Configurar el token
+        setToken(savedToken);
       } else {
-        logoutUser(); // Si el token ha expirado, cerrar sesión
+        logoutUser();
       }
     }
   }, []);
 
   const loginUser = (userData) => {
-    console.log('Datos del usuario recibidos durante el login:', userData);
+    console.log("Datos del usuario recibidos durante el login:", userData);
 
-    const userWithProfileImage = {
-      ...userData,
-      foto_perfil_url: userData.foto_perfil_url || null,
-    };
+    if (!userData.usuario_id) {
+      console.error("El usuario_id no está presente en la respuesta.");
+      return;
+    }
 
-    const expirationTime = new Date().getTime() + 3600 * 1000; // 1 hora de expiración
-    sessionStorage.setItem('user', JSON.stringify(userWithProfileImage));
-    sessionStorage.setItem('token', userData.token);
-    sessionStorage.setItem('tokenExpiration', expirationTime.toString());
-    setUser(userWithProfileImage);
-    setToken(userData.token); // Guardar el token
+    const expirationTime = new Date().getTime() + 3600 * 1000; // 1 hora
+    sessionStorage.setItem("user", JSON.stringify(userData));
+    sessionStorage.setItem("token", userData.token);
+    sessionStorage.setItem("tokenExpiration", expirationTime.toString());
+    setUser(userData); // Guarda el usuario completo con usuario_id
+    setToken(userData.token);
   };
 
   const logoutUser = () => {
-    sessionStorage.clear(); // Limpiar todo el sessionStorage relacionado con el usuario
+    sessionStorage.clear();
     setUser(null);
-    setToken(null); // Limpiar el token
+    setToken(null);
   };
 
   return (

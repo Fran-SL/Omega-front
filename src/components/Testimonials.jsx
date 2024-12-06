@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom';
 
 const TestimoniosSection = () => {
   // Hook para detectar si la sección está en el viewport
@@ -8,6 +9,12 @@ const TestimoniosSection = () => {
     triggerOnce: true,
     threshold: 0.2, // La animación se activa cuando el 20% del elemento es visible
   });
+
+  const navigate = useNavigate(); // Hook para redirigir
+
+  const handleVerMasResenas = () => {
+    navigate('/testimonials/manage'); // Redirige a ManageTestimonials
+  };
 
   return (
     <section ref={ref} className="flex flex-col font-ibm items-center justify-center py-16 px-8 min-h-screen bg-sgreen text-white">
@@ -55,6 +62,17 @@ const TestimoniosSection = () => {
           inView={inView}
         />
       </div>
+
+      {/* Botón "Ver más reseñas" */}
+      <motion.button
+        className="mt-12 px-6 py-3 bg-yellow-500 text-sgreen font-bold text-lg rounded-lg hover:bg-yellow-600 transition-colors"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ delay: 1.2, duration: 0.5, ease: 'easeOut' }}
+        onClick={handleVerMasResenas} // Redirige al hacer clic
+      >
+        Ver más reseñas
+      </motion.button>
     </section>
   );
 };

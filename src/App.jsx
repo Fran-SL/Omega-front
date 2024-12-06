@@ -19,15 +19,18 @@ import Register from './pages/Usuario/Register';
 import Solicitud from './pages/Usuario/Solicitud';
 import Restablecer from './pages/Usuario/Restablecer';
 import Profile from './pages/Usuario/UserProfile';
+import ManageTestimonials from './pages/Usuario/ManageTestimonials';
+import FormTestimonials from './pages/Usuario/FormTestimonials';
 
 // Páginas del blog
 import Blog from './pages/Comun/Blog';
 import ArticleDetail from './pages/Comun/ArticleDetail';
 
-// Administración de blog
-import AdminDashboard  from './pages/Admin/AdminDashboard';
+// Administración
+import AdminDashboard from './pages/Admin/AdminDashboard';
 import ArticleForm from './pages/Admin/ArticleForm';
 import ManageArticles from './pages/Admin/ManageArticles';
+import ManageReseñas from './pages/Admin/ManageReseñas';
 
 // Admin usuarios
 import ManageUsers from './pages/Admin/ManageUsers';
@@ -82,6 +85,22 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/testimonials/manage"
+              element={
+                <ProtectedRoute allowedRoles={[1, 2]}>
+                  <ManageTestimonials />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/testimonials/new"
+              element={
+                <ProtectedRoute allowedRoles={[1, 2]}>
+                  <FormTestimonials />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Rutas para administradores */}
             <Route
@@ -97,6 +116,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[2]}>
                   <ManageUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/reviews"
+              element={
+                <ProtectedRoute allowedRoles={[2]}>
+                  <ManageReseñas />
                 </ProtectedRoute>
               }
             />

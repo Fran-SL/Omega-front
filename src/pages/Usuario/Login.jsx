@@ -25,33 +25,39 @@ const Login = () => {
     });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-
-  try {
-    const response = await login(formData);
-    loginUser({
-      nombre: response.nombre,
-      token: response.token,
-      foto_perfil_url: response.foto_perfil_url,
-      rol_id: response.rol_id, // Asegúrate de que el backend devuelve el rol_id
-    });
-
-    // Redirigir según el rol del usuario
-    if (response.rol_id === 2) {
-      navigate('/admin'); // Redirige al panel de administración
-    } else {
-      navigate('/'); // Redirige al inicio para usuarios normales
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+  
+    try {
+      const response = await login(formData); // Llama al servicio de login
+      console.log("Datos recibidos desde el backend:", response); // Log para depurar
+  
+      // Asegúrate de pasar `usuario_id` junto con los otros datos al contexto
+      loginUser({
+        usuario_id: response.usuario_id, // Incluye el usuario_id aquí
+        nombre: response.nombre,
+        token: response.token,
+        foto_perfil_url: response.foto_perfil_url,
+        rol_id: response.rol_id, // Incluye el rol_id
+      });
+  
+      // Redirigir según el rol del usuario
+      if (response.rol_id === 2) {
+        navigate('/admin'); // Redirige al panel de administración
+      } else {
+        navigate('/'); // Redirige al inicio para usuarios normales
+      }
+  
+      setError(null); // Limpia los errores previos
+    } catch (error) {
+      console.error("Error en el inicio de sesión:", error);
+      setError("Error al iniciar sesión. Verifica tus credenciales.");
+    } finally {
+      setLoading(false); // Finaliza la carga
     }
-
-    setError(null);
-  } catch (error) {
-    setError('Error al iniciar sesión. Verifica tus credenciales.');
-  } finally {
-    setLoading(false);
-  }
-};
+  };
+  
 
 
   const togglePasswordVisibility = () => {

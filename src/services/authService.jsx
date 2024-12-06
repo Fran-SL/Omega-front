@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:4000'; // Cambiar a HTTPS en producción
+const API_URL = 'http://localhost:4000'; // Cambiar a HTTPS en producción 
 
 const handleResponse = async (response) => {
   const data = await response.json();
@@ -31,7 +31,9 @@ export const login = async (credentials) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
     });
-    return handleResponse(response);
+    const userData = await handleResponse(response); // Procesa la respuesta
+    console.log("Datos del usuario recibidos desde el backend:", userData); // Log para verificar
+    return userData; // Devuelve todos los campos, incluyendo usuario_id
   } catch (error) {
     console.error('Error en el inicio de sesión:', error);
     throw error;
@@ -105,5 +107,3 @@ export const deleteAccount = async () => {
     throw error;
   }
 };
-
-
