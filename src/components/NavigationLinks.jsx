@@ -41,7 +41,7 @@ const NavigationLinks = () => {
         {isCitasOpen && (
           <div className="absolute top-full mt-2 bg-white/90 backdrop-blur-md border border-sgreen/10 rounded-b-2xl shadow-lg w-auto text-gray-700">
             <Link to="/agendar-cita" className="block px-4 py-2 hover:text-sgreen rounded-t-md">Agendar Cita</Link>
-            <Link to="/citas/historial" className="block px-4 py-2 hover:text-sgreen rounded-b-md">Historial</Link>
+            <Link to="/ver-cita" className="block px-4 py-2 hover:text-sgreen rounded-b-md">Ver Citas</Link>
           </div>
         )}
       </div>

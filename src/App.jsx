@@ -12,6 +12,7 @@ import FAQ from './pages/Faq';
 import NotFoundPage from './pages/404'; // Importa el componente NotFoundPage
 
 import AgendarCita from './pages/agendar_cita';
+import VerCitas from './pages/ver_citas';
 
 function Layout({ children }) {
   const location = useLocation();
@@ -40,6 +41,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/agendar-cita" element={<AgendarCita/>}/>
+            <Route path="/ver-cita" element={<VerCitas/>}/>
             <Route
               path="/profile"
               element={
