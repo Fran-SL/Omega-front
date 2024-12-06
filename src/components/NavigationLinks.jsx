@@ -115,7 +115,7 @@ const NavigationLinks = React.memo(() => {
           Servicios <FaAngleDown className="ml-1" />
         </button>
         {renderDropdownMenu(isServiciosOpen, setIsServiciosOpen, serviciosRef, [
-          { to: "/servicios/personalizacion", label: "Personalización" },
+          { to: "/solicitud-personalizacion", label: "Personalización" },
           { to: "/servicios/reparacion", label: "Reparación" },
           { to: "/faq", label: "Preguntas Frecuentes" },
         ])}

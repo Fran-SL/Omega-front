@@ -11,6 +11,7 @@ import Home from './pages/Comun/Home';
 import About from './pages/Comun/About';
 import FAQ from './pages/Comun/Faq';
 import NotFoundPage from './pages/Comun/404';
+import SolicitudPersonalizacion from './pages/Usuario/SolicitudPersonalizacion';
 
 // Páginas de autenticación
 import Login from './pages/Usuario/Login';
@@ -65,6 +66,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/solicitud-personalizacion" element={<SolicitudPersonalizacion />} />
             <Route path="/blog/:id" element={<ArticleDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
