@@ -133,9 +133,20 @@ const SolicitudPersonalizacion = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-5xl font-semibold text-gray-800">
+        <h1 className="text-5xl font-semibold text-gray-800 mb-10">
           Solicitud de Personalización
         </h1>
+
+        <p className="text-lg text-gray-700 text-left mb-8">
+          En nuestra sección de Solicitud de Personalización, puedes darle un
+          toque único y especial a tus productos. Entendemos que cada cliente es
+          diferente, por eso ofrecemos la posibilidad de personalizar nuestras
+          piezas para adaptarlas a tus gustos, necesidades y estilo personal. Ya
+          sea grabar un mensaje especial, elegir materiales específicos o
+          adaptar un diseño exclusivo, nuestro equipo de expertos estará
+          encantado de ayudarte a crear algo verdaderamente único. Explora las
+          opciones disponibles y haz que tu producto sea tan especial como tú.
+        </p>
       </motion.div>
 
       <motion.div
@@ -193,7 +204,10 @@ const SolicitudPersonalizacion = () => {
           </div>
 
           <div className="w-full">
-            <DynamicUploadArea ref={uploadAreaRef} onUpload={handleUploadFiles} />
+            <DynamicUploadArea
+              ref={uploadAreaRef}
+              onUpload={handleUploadFiles}
+            />
           </div>
 
           <button

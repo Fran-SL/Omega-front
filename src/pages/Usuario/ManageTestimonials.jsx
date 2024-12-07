@@ -1,13 +1,13 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AuthContext } from '../../services/authContext';
-import EditTestimonialModal from './EditTestimonialModal'; // Importar el modal
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { AuthContext } from "../../services/authContext";
+import EditTestimonialModal from "./ModalTestimonials"; // Importar el modal
 
 const ManageTestimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [filterStars, setFilterStars] = useState(null);
   const [filterOwn, setFilterOwn] = useState(false); // Filtro de reseñas propias
   const [currentPage, setCurrentPage] = useState(1); // Paginación
@@ -19,7 +19,7 @@ const ManageTestimonials = () => {
 
   // Función para obtener testimonios
   const fetchTestimonials = async (stars, isOwn, page = 1) => {
-    setError('');
+    setError("");
     setLoading(true);
     try {
       let url = `http://localhost:4000/testimonios?limit=${testimonialsPerPage}&page=${page}`;
@@ -37,7 +37,7 @@ const ManageTestimonials = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al cargar los testimonios');
+        throw new Error("Error al cargar los testimonios");
       }
 
       const data = await response.json();
@@ -67,17 +67,19 @@ const ManageTestimonials = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`http://localhost:4000/testimonios/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error('Error al eliminar la reseña.');
+        throw new Error("Error al eliminar la reseña.");
       }
 
-      setTestimonials((prev) => prev.filter((testimonial) => testimonial.testimonio_id !== id));
+      setTestimonials((prev) =>
+        prev.filter((testimonial) => testimonial.testimonio_id !== id)
+      );
     } catch (error) {
       alert(error.message);
     }
@@ -87,23 +89,25 @@ const ManageTestimonials = () => {
   const handleSave = async (id, updatedTestimonial) => {
     try {
       const response = await fetch(`http://localhost:4000/testimonios/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(updatedTestimonial),
       });
 
       if (!response.ok) {
-        throw new Error('Error al guardar los cambios.');
+        throw new Error("Error al guardar los cambios.");
       }
 
       const data = await response.json();
       // Actualiza la lista de testimonios con la nueva reseña
       setTestimonials((prev) =>
         prev.map((testimonial) =>
-          testimonial.testimonio_id === id ? { ...testimonial, ...data } : testimonial
+          testimonial.testimonio_id === id
+            ? { ...testimonial, ...data }
+            : testimonial
         )
       );
       setIsModalOpen(false); // Cerrar el modal después de guardar
@@ -115,13 +119,15 @@ const ManageTestimonials = () => {
   return (
     <section className="py-12 bg-white font-ibm">
       <div className="container mx-auto px-6 md:px-12 lg:px-48">
-        <h1 className="text-3xl font-semibold text-gray-800 text-center mb-8">Gestionar Reseñas</h1>
+        <h1 className="text-3xl font-semibold text-gray-800 text-center mb-8">
+          Gestionar Reseñas
+        </h1>
 
         {/* Filtros */}
         <div className="flex justify-between mb-6">
           <div className="flex space-x-4">
             <select
-              value={filterStars || ''}
+              value={filterStars || ""}
               onChange={(e) => setFilterStars(e.target.value || null)}
               className="py-1 px-3 text-sm border-2 rounded-lg bg-white text-gray-700 border-gray-200 hover:bg-gray-100"
             >
@@ -137,11 +143,11 @@ const ManageTestimonials = () => {
               onClick={() => setFilterOwn(!filterOwn)}
               className={`py-2 px-4 text-sm border-2 rounded-lg ${
                 filterOwn
-                  ? 'bg-sgreen text-white border-green-500'
-                  : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-100'
+                  ? "bg-sgreen text-white border-green-500"
+                  : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100"
               }`}
             >
-              {filterOwn ? 'Ver Todas las Reseñas' : 'Ver Solo Mis Reseñas'}
+              {filterOwn ? "Ver Todas las Reseñas" : "Ver Solo Mis Reseñas"}
             </button>
           </div>
         </div>
@@ -149,7 +155,9 @@ const ManageTestimonials = () => {
         {loading ? (
           <p className="text-center text-gray-600">Cargando testimonios...</p>
         ) : testimonials.length === 0 ? (
-          <p className="text-center text-gray-500">No se encontraron testimonios.</p>
+          <p className="text-center text-gray-500">
+            No se encontraron testimonios.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {testimonials.map((testimonial) => (
@@ -161,7 +169,9 @@ const ManageTestimonials = () => {
                 exit={{ opacity: 0 }}
               >
                 <h3 className="text-lg font-medium text-gray-700">
-                  {`${testimonial.nombre || 'Anónimo'} ${testimonial.apellido_paterno || ''} ${testimonial.apellido_materno || ''}`}
+                  {`${testimonial.nombre || "Anónimo"} ${
+                    testimonial.apellido_paterno || ""
+                  } ${testimonial.apellido_materno || ""}`}
                 </h3>
                 <p className="text-gray-600 text-xs">
                   {"★".repeat(testimonial.estrellas || 0)}
@@ -170,7 +180,8 @@ const ManageTestimonials = () => {
                   {testimonial.contenido || "Sin contenido disponible"}
                 </p>
                 <p className="text-gray-500 text-xs">
-                  Fecha: {new Date(testimonial.fecha_creacion).toLocaleDateString()}
+                  Fecha:{" "}
+                  {new Date(testimonial.fecha_creacion).toLocaleDateString()}
                 </p>
 
                 {/* Mostrar botones de edición y eliminación solo para las reseñas propias */}
@@ -202,8 +213,8 @@ const ManageTestimonials = () => {
             disabled={currentPage === 1}
             className={`py-2 px-4 text-sm border-2 rounded-lg ${
               currentPage === 1
-                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                : 'bg-sgreen text-white border-green-500 hover:bg-green-600'
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-sgreen text-white border-green-500 hover:bg-green-600"
             }`}
           >
             Anterior
@@ -214,8 +225,8 @@ const ManageTestimonials = () => {
             disabled={testimonials.length <= testimonialsPerPage}
             className={`py-2 px-4 text-sm border-2 rounded-lg ${
               testimonials.length <= testimonialsPerPage
-                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                : 'bg-sgreen text-white border-green-500 hover:bg-green-600'
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-sgreen text-white border-green-500 hover:bg-green-600"
             }`}
           >
             Siguiente

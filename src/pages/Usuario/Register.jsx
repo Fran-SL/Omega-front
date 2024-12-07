@@ -18,7 +18,6 @@ const Register = () => {
     confirmarContrasena: '',
     telefono: '',
     direccion: '',
-    foto_perfil: null,
   });
   const [error, setError] = useState(null);
   const [step, setStep] = useState(1);
@@ -51,9 +50,13 @@ const Register = () => {
   };
 
   const handleSaveCroppedImage = async () => {
-    const croppedImg = await getCroppedImg(profileImage, cropArea);
-    setCroppedImage(croppedImg);
-    setShowCropper(false);
+    try {
+      const croppedImg = await getCroppedImg(profileImage, cropArea);
+      setCroppedImage(croppedImg);
+      setShowCropper(false);
+    } catch (error) {
+      setError('Error al recortar la imagen.');
+    }
   };
 
   const handleCancelCrop = () => {
@@ -74,20 +77,19 @@ const Register = () => {
       try {
         setIsLoading(true);
         const formDataToSend = new FormData();
-        for (let key in formData) {
-          if (key === 'foto_perfil' && croppedImage) {
-            const response = await fetch(croppedImage);
-            const blob = await response.blob();
-            formDataToSend.append('foto_perfil', blob, 'profile.jpg');
-          } else {
-            formDataToSend.append(key, formData[key]);
-          }
+        Object.keys(formData).forEach((key) => formDataToSend.append(key, formData[key]));
+
+        if (croppedImage) {
+          const response = await fetch(croppedImage);
+          const blob = await response.blob();
+          formDataToSend.append('foto_perfil', blob, 'profile.jpg');
         }
+
         await register(formDataToSend);
         setIsLoading(false);
         setIsRegistered(true);
       } catch (error) {
-        setError('Error al registrar usuario.');
+        setError(error.message || 'Error al registrar usuario.');
         setIsLoading(false);
       }
     } else {

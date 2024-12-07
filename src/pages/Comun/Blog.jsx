@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Blog = () => {
   const [articles, setArticles] = useState([]);
   const [article, setArticle] = useState(null); // Artículo individual
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
@@ -14,13 +14,13 @@ const Blog = () => {
   const { articleId } = useParams(); // Captura el parámetro del artículo (si existe)
 
   const fetchArticles = async (page) => {
-    setError('');
+    setError("");
     try {
       const response = await fetch(
         `http://localhost:4000/blog?limit=${articlesPerPage}&page=${page}`
       );
       if (!response.ok) {
-        throw new Error('Error al cargar los artículos');
+        throw new Error("Error al cargar los artículos");
       }
       const data = await response.json();
 
@@ -33,11 +33,11 @@ const Blog = () => {
   };
 
   const fetchArticle = async (id) => {
-    setError('');
+    setError("");
     try {
       const response = await fetch(`http://localhost:4000/blog/${id}`);
       if (!response.ok) {
-        throw new Error('Error al cargar el artículo');
+        throw new Error("Error al cargar el artículo");
       }
       const data = await response.json();
       setArticle(data);
@@ -93,11 +93,16 @@ const Blog = () => {
         variants={cardVariants}
       >
         <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-md">
-          <h1 className="text-4xl font-semibold text-gray-800 mb-6">{article.titulo}</h1>
+          <h1 className="text-4xl font-semibold text-gray-800 mb-6">
+            {article.titulo}
+          </h1>
           <p className="text-gray-600 text-sm mb-4">
-            Publicado el: {new Date(article.fecha_publicacion).toLocaleDateString()}
+            Publicado el:{" "}
+            {new Date(article.fecha_publicacion).toLocaleDateString()}
           </p>
-          <p className="text-gray-700 leading-relaxed mb-6">{article.contenido}</p>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            {article.contenido}
+          </p>
           <button
             onClick={() => navigate(-1)}
             className="bg-sgreen text-white py-2 px-4 border-2 border-green-500 rounded-2xl shadow-inner-green hover:shadow-inner-hgreen transition duration-300 ease-in-out"
@@ -115,6 +120,14 @@ const Blog = () => {
         <h1 className="text-5xl font-semibold text-center mb-10 mt-10 text-gray-800">
           Blog y Artículos Informativos
         </h1>
+
+        <p className="text-lg text-gray-700 text-left mb-8">
+          Bienvenido a nuestro blog, el espacio donde compartimos las últimas
+          novedades, consejos y tendencias del mundo de la relojería y la
+          joyería. Aquí encontrarás artículos exclusivos escritos por expertos
+          que te ayudarán a conocer más sobre el cuidado, la historia y las
+          innovaciones de tus piezas favoritas.
+        </p>
         <AnimatePresence mode="wait">
           <motion.div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
@@ -132,7 +145,7 @@ const Blog = () => {
               <motion.div
                 key={article.publicacion_id}
                 className="bg-white hover:bg-gray-100 transition-colors duration-200 rounded-2xl p-4 cursor-pointer border border-gray-200 shadow-sm flex flex-col justify-between"
-                style={{ height: '250px' }}
+                style={{ height: "250px" }}
                 variants={cardVariants}
               >
                 <div className="flex-grow">
@@ -140,7 +153,8 @@ const Blog = () => {
                     {article.titulo}
                   </h2>
                   <p className="text-gray-600 text-xs mb-2">
-                    Publicado el: {new Date(article.fecha_publicacion).toLocaleDateString()}
+                    Publicado el:{" "}
+                    {new Date(article.fecha_publicacion).toLocaleDateString()}
                   </p>
                   <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
                     {article.contenido}
@@ -167,8 +181,8 @@ const Blog = () => {
             disabled={currentPage === 1}
             className={`py-1 px-3 text-sm border-2 rounded-2xl transition duration-300 ease-in-out ${
               currentPage === 1
-                ? 'bg-white text-gray-500 border-gray-200 cursor-not-allowed'
-                : 'bg-sgreen text-white border-green-500 hover:shadow-inner-hgreen'
+                ? "bg-white text-gray-500 border-gray-200 cursor-not-allowed"
+                : "bg-sgreen text-white border-green-500 hover:shadow-inner-hgreen"
             }`}
             whileHover={!currentPage === 1 && "hover"}
             whileTap={!currentPage === 1 && "tap"}
@@ -184,8 +198,8 @@ const Blog = () => {
             disabled={currentPage === totalPages}
             className={`py-1 px-3 text-sm border-2 rounded-2xl transition duration-300 ease-in-out ${
               currentPage === totalPages
-                ? 'bg-white text-gray-500 border-gray-200 cursor-not-allowed'
-                : 'bg-sgreen text-white border-green-500 hover:shadow-inner-hgreen'
+                ? "bg-white text-gray-500 border-gray-200 cursor-not-allowed"
+                : "bg-sgreen text-white border-green-500 hover:shadow-inner-hgreen"
             }`}
             whileHover={!currentPage === totalPages && "hover"}
             whileTap={!currentPage === totalPages && "tap"}

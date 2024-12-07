@@ -27,8 +27,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const loginUser = (userData) => {
-    console.log("Datos del usuario recibidos durante el login:", userData);
-
     if (!userData.usuario_id) {
       console.error("El usuario_id no está presente en la respuesta.");
       return;
@@ -38,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.setItem("user", JSON.stringify(userData));
     sessionStorage.setItem("token", userData.token);
     sessionStorage.setItem("tokenExpiration", expirationTime.toString());
-    setUser(userData); // Guarda el usuario completo con usuario_id
+    setUser(userData);
     setToken(userData.token);
   };
 

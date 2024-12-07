@@ -1,55 +1,60 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import { AuthProvider } from './services/authContext';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import { AuthProvider } from "./services/authContext";
 
 // Componentes comunes
-import Header from './components/Header';
-import Footer from './components/Footer';
-import ProtectedRoute from './components/ProtectedRoute';
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Páginas principales
-import Home from './pages/Comun/Home';
-import About from './pages/Comun/About';
-import FAQ from './pages/Comun/Faq';
-import NotFoundPage from './pages/Comun/404';
-import SolicitudPersonalizacion from './pages/Usuario/SolicitudPersonalizacion';
+import Home from "./pages/Comun/Home";
+import About from "./pages/Comun/About";
+import FAQ from "./pages/Comun/Faq";
+import NotFoundPage from "./pages/Comun/404";
+import SolicitudPersonalizacion from "./pages/Usuario/SolicitudPersonalizacion";
 
 // Páginas de autenticación
-import Login from './pages/Usuario/Login';
-import Register from './pages/Usuario/Register';
-import Solicitud from './pages/Usuario/Solicitud';
-import Restablecer from './pages/Usuario/Restablecer';
-import Profile from './pages/Usuario/UserProfile';
-import ManageTestimonials from './pages/Usuario/ManageTestimonials';
-import FormTestimonials from './pages/Usuario/FormTestimonials';
+import Login from "./pages/Usuario/Login";
+import Register from "./pages/Usuario/Register";
+import Solicitud from "./pages/Usuario/Solicitud";
+import Restablecer from "./pages/Usuario/Restablecer";
+import Profile from "./pages/Usuario/UserProfile";
+import ManageTestimonials from "./pages/Usuario/ManageTestimonials";
+import FormTestimonials from "./pages/Usuario/FormTestimonials";
+import ManageEvents from "./pages/Usuario/ManageEvents";
+import ManageCitas from "./pages/Usuario/ManageCitas";
 
 // Páginas del blog
-import Blog from './pages/Comun/Blog';
-import ArticleDetail from './pages/Comun/ArticleDetail';
+import Blog from "./pages/Comun/Blog";
+import ArticleDetail from "./pages/Comun/ArticleDetail";
 
 // Administración
-import AdminDashboard from './pages/Admin/AdminDashboard';
-import ArticleForm from './pages/Admin/ArticleForm';
-import ManageArticles from './pages/Admin/ManageArticles';
-import ManageReseñas from './pages/Admin/ManageReseñas';
-
-// Admin usuarios
-import ManageUsers from './pages/Admin/ManageUsers';
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import ArticleForm from "./pages/Admin/ArticleForm";
+import ManageArticles from "./pages/Admin/ManageArticles";
+import ManageReseñas from "./pages/Admin/ManageReseñas";
+import ManageUsers from "./pages/Admin/ManageUsers";
 
 // Layout general
 function Layout({ children }) {
   const location = useLocation();
 
   const hideHeaderFooter = [
-    '/login',
-    '/register',
-    '/forgot-password',
-    '/reset-password',
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
   ].includes(location.pathname);
 
   return (
     <div className="flex flex-col min-h-screen">
       {!hideHeaderFooter && <Header />}
-      <main className={`flex-grow ${!hideHeaderFooter ? 'pt-20' : ''}`}>
+      <main className={`flex-grow ${!hideHeaderFooter ? "pt-20" : ""}`}>
         {children}
       </main>
       {!hideHeaderFooter && <Footer />}
@@ -69,14 +74,13 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/solicitud-personalizacion" element={<SolicitudPersonalizacion />} />
             <Route path="/blog/:id" element={<ArticleDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<Solicitud />} />
             <Route path="/reset-password" element={<Restablecer />} />
 
-            {/* Rutas para usuarios autenticados */}
+            {/* Rutas protegidas para usuarios autenticados */}
             <Route
               path="/profile"
               element={
@@ -86,7 +90,31 @@ function App() {
               }
             />
             <Route
-              path="/testimonials/manage"
+              path="/citas"
+              element={
+                <ProtectedRoute allowedRoles={[1, 2]}>
+                  <ManageCitas />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/events"
+              element={
+                <ProtectedRoute allowedRoles={[1, 2]}>
+                  <ManageEvents />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/solicitud-personalizacion"
+              element={
+                <ProtectedRoute allowedRoles={[1, 2]}>
+                  <SolicitudPersonalizacion />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/testimonials"
               element={
                 <ProtectedRoute allowedRoles={[1, 2]}>
                   <ManageTestimonials />
