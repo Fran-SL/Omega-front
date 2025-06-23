@@ -1,24 +1,29 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../services/authContext';
 
 const EventForm = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams(); // undefined si es nuevo
+  const location = useLocation();
   const isEditing = Boolean(id);
 
-  const [form, setForm] = useState({
+  // Si viene desde editar, toma los datos del evento del location.state
+  const initialEvent = location.state?.evento || {
     nombre: '',
     descripcion: '',
     fecha_inicio: '',
     fecha_fin: '',
     ubicacion: '',
     capacidad: ''
-  });
+  };
+
+  const [form, setForm] = useState(initialEvent);
 
   useEffect(() => {
-    if (isEditing) {
+    // Si no hay datos en el state y es edición, cargar desde la API
+    if (isEditing && !location.state?.evento) {
       fetch(`http://localhost:4000/eventos/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -26,7 +31,7 @@ const EventForm = () => {
         .then(data => setForm(data))
         .catch(() => alert('Error al cargar el evento'));
     }
-  }, [id, token]);
+  }, [id, token, isEditing, location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -90,7 +95,7 @@ const EventForm = () => {
           type="datetime-local"
           id="fecha_inicio"
           name="fecha_inicio"
-          value={form.fecha_inicio}
+          value={form.fecha_inicio?.slice(0, 16) || ''}
           onChange={handleChange}
           required
           className="w-full border p-2 rounded"
@@ -106,7 +111,7 @@ const EventForm = () => {
           type="datetime-local"
           id="fecha_fin"
           name="fecha_fin"
-          value={form.fecha_fin}
+          value={form.fecha_fin?.slice(0, 16) || ''}
           onChange={handleChange}
           required
           className="w-full border p-2 rounded"

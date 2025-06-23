@@ -46,7 +46,9 @@ const ManageEventsAdmin = () => {
   };
 
   const handleCreate = () => navigate('/admin/events/new');
-  const handleEdit = (id) => navigate(`/admin/events/edit/${id}`);
+  const handleEdit = (evento) => {
+    navigate(`/admin/events/edit/${evento.evento_id}`, { state: { evento } });
+  };
   const requestDelete = (id) => {
     setEventToDelete(id);
     toggleModal();
@@ -79,7 +81,7 @@ const ManageEventsAdmin = () => {
               <td>{ev.ubicacion}</td>
               <td>{ev.capacidad}</td>
               <td>
-                <button onClick={() => handleEdit(ev.evento_id)} className="text-blue-500 mr-2">Editar</button>
+                <button onClick={() => handleEdit(ev)} className="text-blue-500 mr-2">Editar</button>
                 <button onClick={() => requestDelete(ev.evento_id)} className="text-red-500">Eliminar</button>
               </td>
             </tr>
