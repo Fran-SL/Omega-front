@@ -83,7 +83,7 @@ const AdminDashboard = () => {
 
           {/* Servicios Personalizados */}
           <Link
-            to="/admin/custom-services"
+            to="/admin/services"
             className="col-span-2 row-span-1 rounded-xl bg-red-100 p-4 hover:shadow-md transition transform hover:-translate-y-1 flex flex-col justify-between"
           >
             <div className="flex items-center justify-center h-12 w-12 rounded-full bg-red-300 mb-3">

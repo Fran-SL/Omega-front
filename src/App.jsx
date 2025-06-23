@@ -39,6 +39,9 @@ import ArticleForm from "./pages/Admin/ArticleForm";
 import ManageArticles from "./pages/Admin/ManageArticles";
 import ManageReseñas from "./pages/Admin/ManageReseñas";
 import ManageUsers from "./pages/Admin/ManageUsers";
+import ManageServices from "./pages/Admin/ManageServices";
+import ManageEventsAdmin from "./pages/Admin/ManageEventsAdmin";
+import EventForm from "./pages/Admin/EventForm";
 
 // Layout general
 function Layout({ children }) {
@@ -156,6 +159,14 @@ function App() {
               }
             />
             <Route
+              path="/admin/services"
+              element={
+                <ProtectedRoute allowedRoles={[2]}>
+                  <ManageServices />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin/blog"
               element={
                 <ProtectedRoute allowedRoles={[2]}>
@@ -172,10 +183,42 @@ function App() {
               }
             />
             <Route
+              path="/admin/events/new"
+              element={
+                <ProtectedRoute allowedRoles={[2]}>
+                  <EventForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/appointments"
+              element={
+                <ProtectedRoute allowedRoles={[2]}>
+                  <h1>Aqui va el componente Citas</h1>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/events"
+              element={
+                <ProtectedRoute allowedRoles={[2]}>
+                  <ManageEventsAdmin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin/blog/edit/:id"
               element={
                 <ProtectedRoute allowedRoles={[2]}>
                   <ArticleForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/events/edit/:id"
+              element={
+                <ProtectedRoute allowedRoles={[2]}>
+                  <EventForm />
                 </ProtectedRoute>
               }
             />

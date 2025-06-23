@@ -46,7 +46,7 @@ const ArticleForm = ({ onSubmit, initialData }) => {
   };
 
   const handleTextareaResize = (e) => {
-    e.target.style.height = 'auto'; // Reset height to calculate the new height
+    e.target.style.height = 'auto'; // restable la altura para calcular el nuevo scrollHeight
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
