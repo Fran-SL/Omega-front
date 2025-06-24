@@ -32,8 +32,11 @@ const NavigationLinks = React.memo(() => {
       {/* Enlace Inicio dinámico */}
       <NavLink
         to={homeRoute}
-        className="hover:text-sgreen transition duration-300"
-        activeClassName="font-bold text-sgreen"
+        className={({ isActive }) =>
+          `hover:text-sgreen transition duration-300${
+            isActive ? " font-bold text-sgreen" : ""
+          }`
+        }
       >
         Inicio
       </NavLink>
@@ -41,8 +44,11 @@ const NavigationLinks = React.memo(() => {
       {/* Enlace Citas */}
       <NavLink
         to="/citas"
-        className="hover:text-sgreen transition duration-300"
-        activeClassName="font-bold text-sgreen"
+        className={({ isActive }) =>
+          `hover:text-sgreen transition duration-300${
+            isActive ? " font-bold text-sgreen" : ""
+          }`
+        }
       >
         Citas
       </NavLink>
@@ -141,8 +147,11 @@ const NavigationLinks = React.memo(() => {
       {/* Enlace Quiénes Somos */}
       <NavLink
         to="/about"
-        className="hover:text-sgreen transition duration-300 whitespace-nowrap"
-        activeClassName="font-bold text-sgreen"
+        className={({ isActive }) =>
+          `hover:text-sgreen transition duration-300 whitespace-nowrap${
+            isActive ? " font-bold text-sgreen" : ""
+          }`
+        }
       >
         Quiénes Somos
       </NavLink>

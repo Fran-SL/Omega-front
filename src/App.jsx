@@ -42,6 +42,8 @@ import ManageUsers from "./pages/Admin/ManageUsers";
 import ManageServices from "./pages/Admin/ManageServices";
 import ManageEventsAdmin from "./pages/Admin/ManageEventsAdmin";
 import EventForm from "./pages/Admin/EventForm";
+import CitaForm from "./pages/Admin/CitaForm";
+import ManageCitasAdmin from "./pages/Admin/ManageCitasAdmin";
 
 // Layout general
 function Layout({ children }) {
@@ -194,7 +196,7 @@ function App() {
               path="/admin/appointments"
               element={
                 <ProtectedRoute allowedRoles={[2]}>
-                  <h1>Aqui va el componente Citas</h1>
+                  <ManageCitasAdmin />
                 </ProtectedRoute>
               }
             />
@@ -211,6 +213,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[2]}>
                   <ArticleForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/citas"
+              element={
+                <ProtectedRoute allowedRoles={[2]}>
+                  <ManageCitasAdmin />
                 </ProtectedRoute>
               }
             />
