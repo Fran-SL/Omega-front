@@ -44,6 +44,7 @@ import ManageEventsAdmin from "./pages/Admin/ManageEventsAdmin";
 import EventForm from "./pages/Admin/EventForm";
 import CitaForm from "./pages/Admin/CitaForm";
 import ManageCitasAdmin from "./pages/Admin/ManageCitasAdmin";
+import ProductosAdmin from "./pages/Admin/ProductosAdmin";
 
 // Layout general
 function Layout({ children }) {
@@ -229,6 +230,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[2]}>
                   <EventForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/productos"
+              element={
+                <ProtectedRoute allowedRoles={[2]}>
+                  <ProductosAdmin />
                 </ProtectedRoute>
               }
             />
