@@ -6,6 +6,7 @@ const initialForm = {
   descripcion_producto: '',
   precio_producto: '',
   stock: '',
+  imagen_producto: null, // Nuevo campo para la imagen
 };
 
 const ProductosAdmin = () => {
@@ -42,6 +43,10 @@ const ProductosAdmin = () => {
     setForm({ ...form, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    setForm({ ...form, imagen_producto: e.target.files[0] });
+  };
+
   const handleShowForm = () => {
     setForm(initialForm);
     setIsEditing(false);
@@ -73,20 +78,25 @@ const ProductosAdmin = () => {
       ? `http://localhost:4000/productos/${editId}`
       : 'http://localhost:4000/productos';
     const method = isEditing ? 'PUT' : 'POST';
-    // Convertir precio_producto y stock a número antes de enviar
-    const formToSend = {
-      ...form,
-      precio_producto: Number(form.precio_producto),
-      stock: Number(form.stock),
-    };
+
+    const formData = new FormData();
+    formData.append('nombre_producto', form.nombre_producto);
+    formData.append('descripcion_producto', form.descripcion_producto);
+    // Normaliza el precio: elimina puntos de miles y usa punto decimal
+    const precio = String(form.precio_producto).replace(/\./g, '').replace(',', '.');
+    formData.append('precio_producto', precio);
+    formData.append('stock', parseInt(form.stock, 10));
+    if (form.imagen_producto) {
+      formData.append('imagen_producto', form.imagen_producto);
+    }
+
     try {
       const res = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formToSend),
+        body: formData,
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -114,6 +124,7 @@ const ProductosAdmin = () => {
             <table className="min-w-full table-auto border-collapse bg-white rounded-lg">
               <thead>
                 <tr className="bg-gray-100 border-b border-gray-300">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Imagen</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Nombre</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Descripción</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Precio</th>
@@ -126,6 +137,18 @@ const ProductosAdmin = () => {
                 {productos.length > 0 ? (
                   productos.map((producto) => (
                     <tr key={producto.producto_id} className="hover:bg-gray-50 border-b border-gray-300">
+                      <td className="px-6 py-3">
+                        {(() => { console.log('imagen_producto:', producto.imagen_producto); return null; })()}
+                        {producto.imagen_producto ? (
+                          <img
+                            src={`http://localhost:4000/${producto.imagen_producto.replace(/\\/g, '/')}`}
+                            alt={producto.nombre_producto}
+                            className="h-16 w-16 object-cover rounded"
+                          />
+                        ) : (
+                          <span className="text-gray-400">Sin imagen</span>
+                        )}
+                      </td>
                       <td className="px-6 py-3 text-gray-800">{producto.nombre_producto}</td>
                       <td className="px-6 py-3 text-gray-600">{producto.descripcion_producto}</td>
                       <td className="px-6 py-3 text-gray-600">${producto.precio_producto}</td>
@@ -149,7 +172,7 @@ const ProductosAdmin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="text-center py-6 text-gray-600 font-medium border-b border-gray-300">
+                    <td colSpan="7" className="text-center py-6 text-gray-600 font-medium border-b border-gray-300">
                       No hay productos disponibles.
                     </td>
                   </tr>
@@ -161,7 +184,7 @@ const ProductosAdmin = () => {
       )}
       {showForm && (
         <div>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
             <div>
               <label htmlFor="nombre_producto" className="block font-medium mb-1 text-gray-700">Nombre</label>
               <input
@@ -209,6 +232,17 @@ const ProductosAdmin = () => {
                 value={form.stock}
                 onChange={handleChange}
                 required
+                className="w-full border p-2 rounded"
+              />
+            </div>
+            <div>
+              <label htmlFor="imagen_producto" className="block font-medium mb-1 text-gray-700">Imagen</label>
+              <input
+                id="imagen_producto"
+                name="imagen_producto"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
                 className="w-full border p-2 rounded"
               />
             </div>

@@ -17,6 +17,7 @@ import About from "./pages/Comun/About";
 import FAQ from "./pages/Comun/Faq";
 import NotFoundPage from "./pages/Comun/404";
 import SolicitudPersonalizacion from "./pages/Usuario/SolicitudPersonalizacion";
+import Catalogo from "./pages/Comun/Catalogo";
 
 // Páginas de autenticación
 import Login from "./pages/Usuario/Login";
@@ -85,6 +86,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<Solicitud />} />
             <Route path="/reset-password" element={<Restablecer />} />
+            <Route path="/catalogo" element={<Catalogo />} />
 
             {/* Rutas protegidas para usuarios autenticados */}
             <Route

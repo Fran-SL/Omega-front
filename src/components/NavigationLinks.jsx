@@ -53,6 +53,16 @@ const NavigationLinks = React.memo(() => {
         Citas
       </NavLink>
 
+      <NavLink
+        to="/catalogo"
+        className={({ isActive }) =>
+          `hover:text-sgreen transition duration-300${
+            isActive ? " font-bold text-sgreen" : ""
+        }`
+      }>
+        Catálogo
+      </NavLink>
+
       {/* Menú desplegable Servicios */}
       <div className="relative">
         <button
