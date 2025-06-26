@@ -34,7 +34,7 @@ const ManageUsers = () => {
 
       const response = await fetch(`${API_URL}/all?${params.toString()}`, {
         headers: {
-          "x-auth-token": token, // Usar el token del contexto
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -72,7 +72,7 @@ const ManageUsers = () => {
       const response = await fetch(`${API_URL}/${userToDelete}`, {
         method: "DELETE",
         headers: {
-          "x-auth-token": token, // Usar el token del contexto
+          Authorization: `Bearer ${token}`,
         },
       });
 

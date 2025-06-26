@@ -140,25 +140,7 @@ const UserProfile = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/usuarios/perfil', {
-        method: 'PUT',
-        headers: {
-          'x-auth-token': sessionStorage.getItem('token'),
-          'X-CSRF-Token': sessionStorage.getItem('csrf_token')
-        },
-        body: formDataToSend,
-      });
-
-      if (!response.ok) {
-        if (response.status === 400) {
-          throw new Error('Datos inválidos. Por favor, revisa tu información.');
-        } else if (response.status === 401) {
-          throw new Error('No tienes permiso para realizar esta acción.');
-        } else {
-          throw new Error('Error al actualizar el perfil. Intenta nuevamente.');
-        }
-      }
-
+      await updateProfile(formDataToSend);
       setMessage('Perfil actualizado correctamente.');
       setIsEditing(false);
     } catch (error) {
@@ -363,8 +345,8 @@ const UserProfile = () => {
       <Modal
         showModal={showModal}
         toggleModal={toggleModal}
-        handleDeleteAccount={handleDeleteAccount}
-        loadingDelete={loadingDelete}
+        onConfirm={handleDeleteAccount}
+        loading={loadingDelete}
       />
 
       {/* Modal de Cropper */}

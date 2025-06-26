@@ -40,9 +40,14 @@ export const login = async (credentials) => {
   }
 };
 
+// Obtener token desde localStorage o sessionStorage
+const getToken = () => {
+  return localStorage.getItem('token') || sessionStorage.getItem('token') || null;
+};
+
 // Obtener perfil
 export const getProfile = async () => {
-  const token = sessionStorage.getItem('token'); // Obtener el token desde sessionStorage
+  const token = getToken();
   if (!token) {
     throw new Error('Token no encontrado');
   }
@@ -52,7 +57,7 @@ export const getProfile = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'x-auth-token': token, // Enviar el token en el header
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -65,20 +70,29 @@ export const getProfile = async () => {
 
 // Actualizar perfil
 export const updateProfile = async (profileData) => {
-  const token = sessionStorage.getItem('token');
+  const token = getToken();
   if (!token) {
     throw new Error('Token no encontrado');
   }
 
+  let options = {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: null,
+  };
+
+  if (profileData instanceof FormData) {
+    options.body = profileData;
+    // No se debe establecer 'Content-Type' para FormData, el navegador lo hace automáticamente
+  } else {
+    options.headers['Content-Type'] = 'application/json';
+    options.body = JSON.stringify(profileData);
+  }
+
   try {
-    const response = await fetch(`${API_URL}/usuarios/perfil`, {
-      method: 'PUT',
-      headers: {
-        'x-auth-token': token,
-        'Content-Type': 'application/json', // Asegurarse de que los datos se envían como JSON
-      },
-      body: JSON.stringify(profileData),
-    });
+    const response = await fetch(`${API_URL}/usuarios/perfil`, options);
     return handleResponse(response);
   } catch (error) {
     console.error('Error al actualizar el perfil:', error);
@@ -88,7 +102,7 @@ export const updateProfile = async (profileData) => {
 
 // Eliminar Cuenta
 export const deleteAccount = async () => {
-  const token = sessionStorage.getItem('token');
+  const token = getToken();
   if (!token) {
     throw new Error('Token no encontrado');
   }
@@ -97,7 +111,7 @@ export const deleteAccount = async () => {
     const response = await fetch(`${API_URL}/usuarios/eliminar`, {
       method: 'DELETE',
       headers: {
-        'x-auth-token': token, // Asegúrate de enviar el token de autenticación
+        Authorization: `Bearer ${token}`,
       },
     });
 
