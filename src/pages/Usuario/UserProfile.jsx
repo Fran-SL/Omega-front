@@ -149,15 +149,21 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = async () => {
+    console.log('Iniciando eliminación de cuenta...');
     setLoadingDelete(true);
+    setError(''); // Limpiar errores previos
     try {
+      console.log('Llamando a deleteAccount...');
       await deleteAccount();
+      console.log('Cuenta eliminada exitosamente, cerrando sesión...');
       logoutUser();
       navigate('/');
     } catch (error) {
-      setError('Error al eliminar la cuenta');
+      console.error('Error al eliminar la cuenta:', error);
+      setError(`Error al eliminar la cuenta: ${error.message}`);
     } finally {
       setLoadingDelete(false);
+      setShowModal(false); // Cerrar el modal independientemente del resultado
     }
   };
 
@@ -302,6 +308,18 @@ const UserProfile = () => {
         </div>
       </div>
 
+      {/* Mostrar mensajes de error o éxito */}
+      {error && (
+        <div className="max-w-4xl mx-auto mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-2xl">
+          {error}
+        </div>
+      )}
+      {message && (
+        <div className="max-w-4xl mx-auto mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-2xl">
+          {message}
+        </div>
+      )}
+
       {/* Botones */}
       <div className="mt-8 mb-10 flex justify-center space-x-4">
         {isEditing ? (
@@ -347,6 +365,10 @@ const UserProfile = () => {
         toggleModal={toggleModal}
         onConfirm={handleDeleteAccount}
         loading={loadingDelete}
+        title="Eliminar Cuenta"
+        message="¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer y perderás todos tus datos."
+        confirmText="Eliminar Cuenta"
+        cancelText="Cancelar"
       />
 
       {/* Modal de Cropper */}

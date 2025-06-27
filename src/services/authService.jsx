@@ -103,16 +103,25 @@ export const updateProfile = async (profileData) => {
 // Eliminar Cuenta
 export const deleteAccount = async () => {
   const token = getToken();
+  console.log('Token obtenido para eliminación:', token ? 'Token presente' : 'Token ausente');
+  
   if (!token) {
     throw new Error('Token no encontrado');
   }
 
   try {
-    const response = await fetch(`${API_URL}/usuarios/eliminar`, {
+    console.log('Enviando petición DELETE a:', `${API_URL}/usuarios/perfil`);
+    const response = await fetch(`${API_URL}/usuarios/perfil`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    });
+
+    console.log('Respuesta recibida:', {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok
     });
 
     return handleResponse(response);
