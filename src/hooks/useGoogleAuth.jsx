@@ -1,117 +1,67 @@
 import { useState, useCallback } from 'react';
 import { 
-  setupGoogleOneTap, 
   showGooglePopup, 
   authenticateWithGoogle, 
   decodeGoogleJWT,
-  isGoogleAuthAvailable
+  initializeGoogleSignIn
 } from '../services/googleAuthService';
 
 export const useGoogleAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleGoogleResponse = useCallback(async (response, onSuccess, onError) => {
+  const signInWithGoogle = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      let userData = null;
+      // Mostrar popup de Google
+      const googleResponse = await showGooglePopup();
       
-      if (response.credential) {
-        // Respuesta de One Tap - decodificar JWT
-        const decoded = decodeGoogleJWT(response.credential);
-        if (decoded) {
-          userData = {
-            email: decoded.email,
-            name: decoded.name,
-            picture: decoded.picture,
-            google_id: decoded.sub
-          };
-        }
-      } else if (response.userInfo) {
-        // Respuesta de popup OAuth
+      // Procesar respuesta
+      let userData = null;
+      if (googleResponse.credential) {
+        // JWT token
+        const decoded = decodeGoogleJWT(googleResponse.credential);
         userData = {
-          email: response.userInfo.email,
-          name: response.userInfo.name,
-          picture: response.userInfo.picture,
-          google_id: response.userInfo.id
+          email: decoded.email,
+          name: decoded.name,
+          picture: decoded.picture,
+          google_id: decoded.sub
         };
+      } else if (googleResponse.userInfo) {
+        // OAuth userInfo
+        userData = googleResponse.userInfo;
       }
 
-      if (!userData) {
-        throw new Error('No se pudo obtener información del usuario');
-      }
-
-      // Enviar al backend para autenticación
-      const authResult = await authenticateWithGoogle(
-        response.credential, 
-        response.userInfo
-      );
-
-      // Llamar callback de éxito
-      if (onSuccess) {
-        onSuccess(authResult);
-      }
-
+      // Enviar al backend
+      const authResult = await authenticateWithGoogle(googleResponse);
+      
+      setLoading(false);
       return authResult;
 
     } catch (err) {
-      console.error('Error en autenticación con Google:', err);
       setError(err.message);
-      
-      if (onError) {
-        onError(err);
-      }
-      
-      throw err;
-    } finally {
       setLoading(false);
+      throw err;
     }
   }, []);
 
-  const signInWithGoogle = useCallback(async (onSuccess, onError) => {
+  const initializeOneTap = useCallback(async (onSuccess) => {
     try {
-      setLoading(true);
-      setError(null);
-
-      // Verificar si Google Auth está configurado
-      if (!isGoogleAuthAvailable()) {
-        throw new Error('Google Auth no está configurado. Contacta al administrador.');
-      }
-
-      // Intentar mostrar Google One Tap o popup
-      const response = await showGooglePopup();
-      return await handleGoogleResponse(response, onSuccess, onError);
-
-    } catch (err) {
-      console.error('Error al iniciar sesión con Google:', err);
-      const errorMessage = err.message.includes('configurado') 
-        ? 'Google Auth no está configurado correctamente'
-        : 'Error al conectar con Google. Inténtalo de nuevo.';
-      
-      setError(errorMessage);
-      
-      if (onError) {
-        onError(err);
-      }
-      
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [handleGoogleResponse]);
-
-  const initializeOneTap = useCallback(async (onSuccess, onError) => {
-    try {
-      await setupGoogleOneTap((response) => {
-        handleGoogleResponse(response, onSuccess, onError);
+      await initializeGoogleSignIn((response) => {
+        // Procesar respuesta automáticamente
+        const decoded = decodeGoogleJWT(response.credential);
+        if (decoded && onSuccess) {
+          authenticateWithGoogle(response)
+            .then(onSuccess)
+            .catch(err => setError(err.message));
+        }
       });
     } catch (err) {
-      console.error('Error al inicializar Google One Tap:', err);
-      setError('Error al inicializar Google Auth');
+      setError(err.message);
     }
-  }, [handleGoogleResponse]);
+  }, []);
 
   return {
     loading,
@@ -119,6 +69,6 @@ export const useGoogleAuth = () => {
     signInWithGoogle,
     initializeOneTap,
     clearError: () => setError(null),
-    isAvailable: isGoogleAuthAvailable()
+    isAvailable: !!import.meta.env.VITE_GOOGLE_CLIENT_ID
   };
 };

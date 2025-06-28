@@ -2,11 +2,13 @@ import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/authService';
 import { AuthContext } from '../../services/authContext';
-import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 import { motion } from 'framer-motion';
 import { AiOutlineLoading, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import logo from '../../assets/Logo.svg';
 import googleLogo from '../../assets/google.png';
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -18,59 +20,58 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { loginUser } = useContext(AuthContext);
-  
-  // Hook para Google Auth
-  const { 
-    loading: googleLoading, 
-    error: googleError, 
-    signInWithGoogle, 
-    initializeOneTap,
-    clearError,
-    isAvailable: isGoogleAvailable
-  } = useGoogleAuth();
 
-  // Inicializar Google One Tap al cargar el componente
   useEffect(() => {
-    if (isGoogleAvailable) {
-      initializeOneTap(handleGoogleSuccess, handleGoogleError);
+    if (window.google && !window.gsiInitialized) {
+      window.gsiInitialized = true;
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+      });
+      window.google.accounts.id.renderButton(
+        document.getElementById("googleSignInDiv"),
+        { theme: "outline", size: "large" }
+      );
     }
-  }, [initializeOneTap, isGoogleAvailable]);
+  }, []);
 
-  const handleGoogleSuccess = (response) => {
-    console.log('Google auth exitoso:', response);
-    
-    // Procesar respuesta similar al login normal
-    loginUser({
-      usuario_id: response.usuario_id || response.userId || response.id,
-      nombre: response.nombre || response.name,
-      token: response.token,
-      foto_perfil_url: response.foto_perfil_url || response.picture,
-      rol_id: response.rol_id || 1, // Por defecto usuario normal
-    });
-
-    // Redirigir según el rol
-    if (response.rol_id === 2) {
-      navigate('/admin');
-    } else {
-      navigate('/');
-    }
-  };
-
-  const handleGoogleError = (error) => {
-    console.error('Error en Google auth:', error);
-    setError('Error al iniciar sesión con Google. Inténtalo de nuevo.');
-  };
-
-  const handleGoogleSignIn = async () => {
-    clearError();
-    setError(null);
-    
-    try {
-      await signInWithGoogle(handleGoogleSuccess, handleGoogleError);
-    } catch (error) {
-      // El error ya se maneja en handleGoogleError
-    }
-  };
+  function handleCredentialResponse(response) {
+    const googleToken = response.credential;
+    fetch(`${API_URL}/usuarios/auth/google`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ googleToken }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify({
+            usuario_id: data.usuario_id,
+            nombre: data.nombre,
+            token: data.token,
+            foto_perfil_url: data.foto_perfil_url,
+            rol_id: data.rol_id,
+            email: data.email,
+          }));
+          // ACTUALIZA el contexto de usuario aquí:
+          loginUser({
+            usuario_id: data.usuario_id,
+            nombre: data.nombre,
+            token: data.token,
+            foto_perfil_url: data.foto_perfil_url,
+            rol_id: data.rol_id,
+            email: data.email,
+          });
+          window.location.href = "/";
+        } else {
+          setError(data.message || "No se pudo autenticar");
+        }
+      })
+      .catch((err) => {
+        setError("Error de conexión: " + err.message);
+      });
+  }
 
   const handleChange = (e) => {
     setFormData({
@@ -113,7 +114,6 @@ const Login = () => {
   };
   
 
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -140,9 +140,9 @@ const Login = () => {
           transition={{ duration: 0.4, ease: 'easeOut' }}
         />
         <p className="text-center text-gray-500 mb-4">Introduce tus datos para iniciar sesión</p>
-        {(error || googleError) && (
+        {(error) && (
           <p className="text-red-500 text-center mb-4">
-            {error || googleError}
+            {error}
           </p>
         )}
 
@@ -224,38 +224,7 @@ const Login = () => {
           <span className="mx-2 text-gray-500">o</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
-        {isGoogleAvailable ? (
-          <motion.button
-            onClick={handleGoogleSignIn}
-            disabled={googleLoading || loading}
-            className="flex items-center justify-center w-full border border-gray-300 px-4 py-2 rounded-2xl hover:bg-gray-100 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            whileHover={!googleLoading && !loading ? { scale: 1.05 } : {}}
-            whileTap={!googleLoading && !loading ? { scale: 0.95 } : {}}
-          >
-            {googleLoading ? (
-              <>
-                <motion.span
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
-                  className="inline-block mr-2"
-                >
-                  <AiOutlineLoading size={20} />
-                </motion.span>
-                Conectando con Google...
-              </>
-            ) : (
-              <>
-                <img src={googleLogo} alt="Google" className="w-5 h-5 mr-2" />
-                Iniciar sesión con Google
-              </>
-            )}
-          </motion.button>
-        ) : (
-          <div className="flex items-center justify-center w-full border border-gray-300 px-4 py-2 rounded-2xl bg-gray-100 text-gray-500 cursor-not-allowed">
-            <img src={googleLogo} alt="Google" className="w-5 h-5 mr-2 opacity-50" />
-            Google Auth no configurado
-          </div>
-        )}
+        <div id="googleSignInDiv" style={{ margin: "2rem auto" }}></div>
         <p className="text-center text-gray-500 mt-4">
           ¿No tienes una cuenta? <a href="/register" className="text-sgreen hover:underline">Regístrate</a>
         </p>

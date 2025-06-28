@@ -1,5 +1,22 @@
 import { createContext, useState, useEffect } from "react";
 
+// Decodificador JWT simple (sin validación de firma)
+function decodeJWT(token) {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  } catch {
+    return null;
+  }
+}
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -9,6 +26,23 @@ export const AuthProvider = ({ children }) => {
     if (local) return JSON.parse(local);
     const session = sessionStorage.getItem("user");
     if (session) return JSON.parse(session);
+    // Si no hay user pero hay token, decodifica el JWT
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const decoded = decodeJWT(token);
+      if (decoded) {
+        // Ajusta los campos según tu backend
+        return {
+          usuario_id: decoded.usuario_id || decoded.userId || decoded.id,
+          nombre: decoded.nombre || decoded.name,
+          email: decoded.email,
+          rol_id: decoded.rol_id || decoded.role,
+          foto_perfil_url: decoded.foto_perfil_url || decoded.picture,
+          token: token,
+        };
+      }
+    }
     return null;
   };
   const getInitialToken = () => {

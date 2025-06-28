@@ -12,7 +12,7 @@ import userBackground from '../../assets/user_background.jpg';
 const LazyCropper = React.lazy(() => import('react-easy-crop'));
 
 const UserProfile = () => {
-  const { logoutUser } = useContext(AuthContext);
+  const { user, logoutUser } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
   const [originalData, setOriginalData] = useState({});
@@ -171,6 +171,14 @@ const UserProfile = () => {
     setShowModal(!showModal);
   };
 
+  // Determinar la imagen de perfil a mostrar
+  const imagenPerfil =
+    (user && user.foto_perfil_url && user.foto_perfil_url.startsWith('http'))
+      ? user.foto_perfil_url
+      : (profileImage && profileImage.startsWith('http'))
+        ? profileImage
+        : userImageDefault;
+
   if (loading) {
     return <div className="text-center">Cargando perfil...</div>;
   }
@@ -187,7 +195,7 @@ const UserProfile = () => {
         />
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white w-40 h-40 bg-gray-200"> {/* Imagen más grande */}
           <img
-            src={croppedImage ? croppedImage : profileImage ? profileImage : userImageDefault}
+            src={croppedImage ? croppedImage : imagenPerfil}
             alt="User"
             className="w-full h-full object-cover rounded-full"
             onClick={handleImageClick}
