@@ -1,10 +1,11 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/authService';
 import { AuthContext } from '../../services/authContext';
+import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 import { motion } from 'framer-motion';
 import { AiOutlineLoading, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/Logo.svg';
 import googleLogo from '../../assets/google.png';
 
 const Login = () => {
@@ -17,6 +18,59 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { loginUser } = useContext(AuthContext);
+  
+  // Hook para Google Auth
+  const { 
+    loading: googleLoading, 
+    error: googleError, 
+    signInWithGoogle, 
+    initializeOneTap,
+    clearError,
+    isAvailable: isGoogleAvailable
+  } = useGoogleAuth();
+
+  // Inicializar Google One Tap al cargar el componente
+  useEffect(() => {
+    if (isGoogleAvailable) {
+      initializeOneTap(handleGoogleSuccess, handleGoogleError);
+    }
+  }, [initializeOneTap, isGoogleAvailable]);
+
+  const handleGoogleSuccess = (response) => {
+    console.log('Google auth exitoso:', response);
+    
+    // Procesar respuesta similar al login normal
+    loginUser({
+      usuario_id: response.usuario_id || response.userId || response.id,
+      nombre: response.nombre || response.name,
+      token: response.token,
+      foto_perfil_url: response.foto_perfil_url || response.picture,
+      rol_id: response.rol_id || 1, // Por defecto usuario normal
+    });
+
+    // Redirigir según el rol
+    if (response.rol_id === 2) {
+      navigate('/admin');
+    } else {
+      navigate('/');
+    }
+  };
+
+  const handleGoogleError = (error) => {
+    console.error('Error en Google auth:', error);
+    setError('Error al iniciar sesión con Google. Inténtalo de nuevo.');
+  };
+
+  const handleGoogleSignIn = async () => {
+    clearError();
+    setError(null);
+    
+    try {
+      await signInWithGoogle(handleGoogleSuccess, handleGoogleError);
+    } catch (error) {
+      // El error ya se maneja en handleGoogleError
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -86,7 +140,11 @@ const Login = () => {
           transition={{ duration: 0.4, ease: 'easeOut' }}
         />
         <p className="text-center text-gray-500 mb-4">Introduce tus datos para iniciar sesión</p>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {(error || googleError) && (
+          <p className="text-red-500 text-center mb-4">
+            {error || googleError}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <motion.div
@@ -166,14 +224,38 @@ const Login = () => {
           <span className="mx-2 text-gray-500">o</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
-        <motion.button
-          className="flex items-center justify-center w-full border border-gray-300 px-4 py-2 rounded-2xl hover:bg-gray-100 transition duration-300"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <img src={googleLogo} alt="Google" className="w-5 h-5 mr-2" />
-          Iniciar sesión con Google
-        </motion.button>
+        {isGoogleAvailable ? (
+          <motion.button
+            onClick={handleGoogleSignIn}
+            disabled={googleLoading || loading}
+            className="flex items-center justify-center w-full border border-gray-300 px-4 py-2 rounded-2xl hover:bg-gray-100 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            whileHover={!googleLoading && !loading ? { scale: 1.05 } : {}}
+            whileTap={!googleLoading && !loading ? { scale: 0.95 } : {}}
+          >
+            {googleLoading ? (
+              <>
+                <motion.span
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                  className="inline-block mr-2"
+                >
+                  <AiOutlineLoading size={20} />
+                </motion.span>
+                Conectando con Google...
+              </>
+            ) : (
+              <>
+                <img src={googleLogo} alt="Google" className="w-5 h-5 mr-2" />
+                Iniciar sesión con Google
+              </>
+            )}
+          </motion.button>
+        ) : (
+          <div className="flex items-center justify-center w-full border border-gray-300 px-4 py-2 rounded-2xl bg-gray-100 text-gray-500 cursor-not-allowed">
+            <img src={googleLogo} alt="Google" className="w-5 h-5 mr-2 opacity-50" />
+            Google Auth no configurado
+          </div>
+        )}
         <p className="text-center text-gray-500 mt-4">
           ¿No tienes una cuenta? <a href="/register" className="text-sgreen hover:underline">Regístrate</a>
         </p>

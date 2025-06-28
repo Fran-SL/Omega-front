@@ -130,3 +130,89 @@ export const deleteAccount = async () => {
     throw error;
   }
 };
+
+// FUNCIONES DE RESERVAS DE PRODUCTOS
+
+// Obtener stock actualizado de un producto
+export const obtenerStockProducto = async (productoId) => {
+  try {
+    const response = await fetch(`${API_URL}/productos/${productoId}/stock`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return handleResponse(response);
+  } catch (error) {
+    console.error('Error al obtener stock del producto:', error);
+    throw error;
+  }
+};
+
+// Reservar producto
+export const reservarProductoAuth = async (productoId, cantidad, tiempoExpiracion = 30) => {
+  const token = getToken();
+  if (!token) {
+    throw new Error('Debes iniciar sesión para reservar productos');
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/productos/${productoId}/reservar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ 
+        cantidad, 
+        tiempo_expiracion: tiempoExpiracion 
+      }),
+    });
+    return handleResponse(response);
+  } catch (error) {
+    console.error('Error al reservar producto:', error);
+    throw error;
+  }
+};
+
+// Cancelar reserva
+export const cancelarReservaAuth = async (reservaId) => {
+  const token = getToken();
+  if (!token) {
+    throw new Error('Token no encontrado');
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/productos/reserva/${reservaId}/cancelar`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return handleResponse(response);
+  } catch (error) {
+    console.error('Error al cancelar reserva:', error);
+    throw error;
+  }
+};
+
+// Confirmar reserva
+export const confirmarReservaAuth = async (reservaId) => {
+  const token = getToken();
+  if (!token) {
+    throw new Error('Token no encontrado');
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/productos/reserva/${reservaId}/confirmar`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return handleResponse(response);
+  } catch (error) {
+    console.error('Error al confirmar reserva:', error);
+    throw error;
+  }
+};
